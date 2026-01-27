@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+  <body>
+
+  <h1>1. Le langage <strong>SQL</strong></h1>
+
+  <h2>1.1. Définition</h2>
+  <p>
+    Le langage <strong>SQL</strong> (<strong>S</strong>tructured <strong>Q</strong>uery <strong>L</strong>anguage ou Langage de requêtes structuré)
+    est un langage comprenant à lui seul l'ensemble des ordres nécessaires à la création et à la gestion d'une base
+    de données relationnelle. Il a été créé en <strong>1986</strong> et est en fait l'aboutissement de plusieurs
+    langages (<strong>Sequel</strong> en <strong>1977</strong>, <strong>System/R</strong>, ...) créés depuis
+    l'apparition du modèle relationnel en <strong>1970</strong>
+    (le modèle relationnel a été inventé par <strong>Mr Codd</strong>, un mathématicien de chez <strong>IBM</strong>).
+    L'utilisation du langage <strong>SQL</strong> suppose obligatoirement que les données aient été définies selon
+    le modèle relationnel au sein d'un <strong>SGBDR</strong>
+    (<strong>Oracle</strong>©, <strong>SQLServer</strong>, <strong>mySQL</strong>, <strong>PostgreSQL</strong>...).
+  </p>
+
+  <h2>1.2. Les différentes normes utilisées</h2>
+  <p>
+    Il existe aujourd'hui plusieurs normes relatives à l'utilisation du <strong><u> langage SQL</u></strong>.
+    La différence entre ces deux normes se situe principalement dans l'écriture des jointures et dans l'ajout de fonctionnalités :
+  </p>
+
+  <ul>
+    <li>La norme <strong>SQL 89</strong> qui est encore très utilisée actuellement.</li>
+    <li>La norme <strong>SQL 92</strong>.</li>
+    <li>Aujourd'hui <strong>SQL 2011</strong>.</li>
+  </ul>
+
+  <p>
+    Bien qu'il existe des normes il peut y avoir des différences entre <strong>SGBDR</strong> dans la syntaxe.
+    Ainsi on peut lire sur le site de <strong>PostgreSQL</strong> :
+  </p>
+
+  <blockquote>
+    <p>
+      "Le développement de <strong>PostgreSQL</strong>™ respecte le standard en vigueur,
+      tant que celui-ci ne s'oppose pas aux fonctionnalités traditionnelles ou au bon sens."
+    </p>
+
+    <p>
+      "<strong>SQL-92</strong> définit trois niveaux de conformité : basique (<strong>ENTRY</strong>),
+      intermédiaire (<strong>INTERMEDIATE</strong>) et complète (<strong>FULL</strong>).
+      La majorité des systèmes de gestion de bases de données se prétendent compatibles au standard <strong>SQL</strong>
+      dès lors qu'ils se conforment au niveau <strong>Entry</strong>."
+    </p>
+  </blockquote>
+
+  <h1>2. Le modèle de données utilisé dans le cours</h1>
+
+  <h2>2.1. Le modèle entité-association (ou <strong>MCD</strong>) d'un établissement hospitalier</h2>
+  <h2>2.2. Le modèle relationnel (ou <strong>MRD</strong>) d'un établissement hospitalier</h2>
+  <h2>2.3. La description textuelle des tables utilisées</h2>
+
+  <h3><mark>fonction_personnel</mark></h3>
+  <p>
+    <strong>(code_fonction, libellé_fonction)</strong><br>
+    Clé primaire : <strong>code_fonction</strong>
+  </p>
+
+  <h3><mark>service</mark></h3>
+  <p>
+    <strong>(num_service, libellé_service, capacité_accueil, date_ouverture)</strong><br>
+    Clé primaire : <strong>num_service</strong>
+  </p>
+
+</body>
+</html>

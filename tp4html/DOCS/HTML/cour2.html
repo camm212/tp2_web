@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cours HTML — Leçon 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f4ff;
+      --ink: #0d1b3e;
+      --accent: #2563eb;
+      --accent2: #16a34a;
+      --accent-light: #dbeafe;
+      --muted: #64748b;
+      --card: #e2eafc;
+      --code-bg: #0d1b3e;
+      --code-fg: #e8eeff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--ink); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+    /* HEADER */
+    header { border-bottom: 2px solid var(--ink); padding: 1.2rem 3rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; letter-spacing: -0.02em; }
+    .logo em { font-style: italic; color: var(--accent); }
+    nav { display: flex; gap: 2rem; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+    nav a { color: var(--ink); text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: var(--accent); }
+    .lesson-badge { background: var(--accent); color: white; padding: 0.35rem 0.9rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* HERO */
+    .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 50vh; border-bottom: 2px solid var(--ink); }
+    .hero-left { padding: 5rem 3rem; border-right: 2px solid var(--ink); display: flex; flex-direction: column; justify-content: center; animation: fadeUp 0.8s ease both; }
+    .hero-tag { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .hero-tag::before { content: ''; display: inline-block; width: 30px; height: 2px; background: var(--accent); }
+    h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    h1 em { font-style: italic; color: var(--accent); }
+    .hero-desc { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 420px; }
+    .hero-right { padding: 3rem; display: flex; flex-direction: column; justify-content: center; background: var(--code-bg); color: var(--code-fg); position: relative; overflow: hidden; animation: fadeUp 0.8s 0.2s ease both; }
+    .hero-right::before { content: '<a>'; position: absolute; bottom: -1rem; right: 2rem; font-size: 8rem; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.04); }
+    .code-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 1.5rem; text-transform: uppercase; }
+    .code-hero { font-family: 'DM Mono', monospace; font-size: 0.9rem; line-height: 2; position: relative; z-index: 1; }
+
+    /* Syntax */
+    .t { color: #60a5fa; }
+    .a { color: #93c5fd; }
+    .v { color: #fbbf24; }
+    .c { color: #475569; font-style: italic; }
+    .s { color: #86efac; }
+
+    /* MAIN LAYOUT */
+    .main { display: grid; grid-template-columns: 260px 1fr; border-bottom: 2px solid var(--ink); }
+
+    /* SIDEBAR */
+    aside { border-right: 2px solid var(--ink); padding: 2.5rem 0; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; }
+    .aside-title { padding: 0 1.5rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 700; color: var(--muted); text-decoration: none; border-left: 3px solid transparent; transition: all 0.2s; }
+    .sidebar-link:hover { color: var(--ink); background: var(--accent-light); border-left-color: var(--accent); }
+    .sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-light); }
+    .sidebar-link .num { font-family: 'DM Mono', monospace; font-size: 0.7rem; background: var(--ink); color: var(--bg); padding: 0.15rem 0.4rem; min-width: 24px; text-align: center; }
+    .sidebar-link.active .num { background: var(--accent); }
+
+    /* CONTENT */
+    .content { padding: 3rem 4rem; max-width: 820px; animation: fadeUp 0.8s 0.3s ease both; }
+    .section { margin-bottom: 4rem; }
+    .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    h2 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; margin-bottom: 1.25rem; letter-spacing: -0.02em; line-height: 1.15; }
+    h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin: 2rem 0 0.75rem; color: var(--ink); }
+    p { font-size: 1rem; line-height: 1.85; color: #334155; margin-bottom: 1rem; }
+    strong { color: var(--ink); font-weight: 700; }
+    ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+    li { font-size: 1rem; line-height: 1.85; color: #334155; margin-bottom: 0.25rem; }
+
+    /* CODE BLOCKS */
+    .code-block { background: var(--code-bg); color: var(--code-fg); padding: 1.75rem 2rem; font-family: 'DM Mono', monospace; font-size: 0.85rem; line-height: 1.9; margin: 1.5rem 0; position: relative; border-left: 4px solid var(--accent); overflow-x: auto; white-space: pre; }
+    .copy-btn { position: absolute; top: 0.75rem; right: 1rem; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; font-family: 'Syne', sans-serif; user-select: none; }
+    .copy-btn:hover { color: #60a5fa; }
+    code { font-family: 'DM Mono', monospace; background: var(--accent-light); color: var(--accent); padding: 0.15em 0.45em; font-size: 0.88em; }
+
+    /* CALLOUT */
+    .callout { border: 2px solid var(--ink); padding: 1.5rem 2rem; margin: 2rem 0; position: relative; background: var(--card); }
+    .callout::before { content: attr(data-icon); position: absolute; top: -0.9rem; left: 1.5rem; background: var(--bg); padding: 0 0.5rem; font-size: 1.1rem; }
+    .callout-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; color: var(--accent2); }
+    .callout p { color: var(--muted); margin: 0; font-size: 0.9rem; }
+    .callout.warn .callout-title { color: #b45309; }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; margin: 2rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: var(--ink); color: var(--bg); padding: 0.85rem 1rem; text-align: left; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--card); color: #334155; }
+    tr:hover td { background: var(--accent-light); }
+    td code { background: none; color: var(--accent); padding: 0; }
+
+    /* LINK TYPES GRID */
+    .link-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--ink); border: 2px solid var(--ink); margin: 2rem 0; }
+    .link-item { background: var(--bg); padding: 1.25rem 1.5rem; transition: background 0.2s; }
+    .link-item:hover { background: var(--accent-light); }
+    .link-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .link-name { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--accent); font-weight: 500; margin-bottom: 0.3rem; }
+    .link-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+    /* PSEUDO CLASSES */
+    .pseudo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--ink); border: 2px solid var(--ink); margin: 2rem 0; }
+    .pseudo-item { background: var(--bg); padding: 1rem 1.25rem; }
+    .pseudo-name { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--accent); font-weight: 500; margin-bottom: 0.25rem; }
+    .pseudo-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
+    /* DEMO ZONE */
+    .demo { border: 2px solid var(--ink); margin: 2rem 0; }
+    .demo-header { background: var(--ink); color: var(--bg); padding: 0.75rem 1.5rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .demo-body { padding: 1.5rem 2rem; }
+    .demo-body a { color: var(--accent); font-weight: 700; }
+    .demo-body a:hover { color: #1d4ed8; }
+
+    /* QUIZ */
+    .quiz { border: 2px solid var(--ink); margin: 2rem 0; }
+    .quiz-header { background: var(--ink); color: var(--bg); padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .quiz-body { padding: 1.5rem; }
+    .quiz-q { margin-bottom: 2rem; }
+    .quiz-question { font-weight: 700; margin-bottom: 1rem; font-size: 0.95rem; }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .quiz-option { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border: 1.5px solid var(--card); cursor: pointer; font-size: 0.9rem; transition: all 0.2s; background: var(--bg); }
+    .quiz-option:hover { border-color: var(--accent); background: var(--accent-light); }
+    .quiz-option.correct { border-color: var(--accent2); background: #dcfce7; color: var(--accent2); }
+    .quiz-option.wrong { border-color: #dc2626; background: #fee2e2; color: #dc2626; }
+    .quiz-option input[type="radio"] { accent-color: var(--accent); }
+    .quiz-btn { margin-top: 1rem; background: var(--ink); color: var(--bg); border: none; padding: 0.85rem 2rem; font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+    .quiz-btn:hover { background: var(--accent); }
+    .quiz-result { display: none; margin-top: 1rem; font-weight: 700; font-size: 0.9rem; }
+    .quiz-result.show { display: block; }
+    .quiz-result.ok { color: var(--accent2); }
+    .quiz-result.fail { color: #dc2626; }
+
+    /* PROGRESS */
+    .progress-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .progress-bar { height: 4px; background: var(--card); margin-bottom: 3rem; }
+    .progress-fill { height: 100%; background: var(--accent); width: 25%; transition: width 1s ease; }
+
+    /* DIVIDER */
+    .divider { height: 2px; background: var(--card); margin: 3rem 0; }
+
+    /* NAV */
+    .nav-actions { display: flex; justify-content: space-between; align-items: center; padding: 2rem 4rem; border-top: 2px solid var(--ink); }
+    .lesson-counter { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .nav-btn { display: flex; align-items: center; gap: 0.75rem; background: none; border: 2px solid var(--ink); padding: 0.85rem 1.5rem; font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; color: var(--ink); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--ink); color: var(--bg); }
+    .nav-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+    .nav-btn.primary:hover { background: var(--ink); border-color: var(--ink); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) { .content { padding: 2.5rem; } }
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .main { grid-template-columns: 1fr; }
+      aside { display: none; }
+      .content { padding: 1.5rem; }
+      header { padding: 1rem 1.5rem; }
+      nav { display: none; }
+      .link-grid, .pseudo-grid { grid-template-columns: 1fr; }
+      .nav-actions { padding: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+      h1 { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">HTML<em>Academy</em></div>
+    <nav>
+      <a href="#">Cours</a>
+      <a href="#">Référence</a>
+      <a href="#">Exercices</a>
+    </nav>
+    <span class="lesson-badge">Leçon 02 / 4</span>
+  </header>
+
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-tag">Les liens hypertextes</div>
+      <h1>La balise <em>&lt;a&gt;</em></h1>
+      <p class="hero-desc">Apprenez à créer des liens hypertextes, comprendre les chemins absolus et relatifs, et styliser vos liens avec les pseudo-classes CSS.</p>
+    </div>
+    <div class="hero-right">
+      <div class="code-label">// différents types de liens</div>
+      <pre class="code-hero"><span class="c">&lt;!-- Lien interne --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"page2.html"</span><span class="t">&gt;</span>Page 2<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Lien externe --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"https://w3.org"</span>
+   <span class="a">target</span>=<span class="v">"_blank"</span><span class="t">&gt;</span>W3C<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Lien email --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"mailto:moi@site.fr"</span><span class="t">&gt;</span>
+  M'écrire
+<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Ancre --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"#section2"</span><span class="t">&gt;</span>Aller §2<span class="t">&lt;/a&gt;</span></pre>
+    </div>
+  </section>
+
+  <div class="main">
+    <aside>
+      <div class="aside-title">Dans cette leçon</div>
+      <a href="#intro" class="sidebar-link active"><span class="num">01</span> La balise &lt;a&gt;</a>
+      <a href="#chemins" class="sidebar-link"><span class="num">02</span> Chemins abs. / relatifs</a>
+      <a href="#types" class="sidebar-link"><span class="num">03</span> Types de liens</a>
+      <a href="#attributs" class="sidebar-link"><span class="num">04</span> Attributs utiles</a>
+      <a href="#pseudo" class="sidebar-link"><span class="num">05</span> Pseudo-classes CSS</a>
+      <a href="#conseils" class="sidebar-link"><span class="num">06</span> Bonnes pratiques</a>
+      <a href="#quiz" class="sidebar-link"><span class="num">07</span> Quiz</a>
+    </aside>
+
+    <div class="content">
+
+      <div class="progress-label">Progression du cours</div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+
+      <!-- SECTION 1 -->
+      <div class="section" id="intro">
+        <div class="section-label">01 — Introduction</div>
+        <h2>La balise &lt;a&gt;</h2>
+        <p>L'essence même du Web est de pouvoir naviguer sur différentes pages en suivant des <strong>liens hypertextes</strong>. La balise utilisée est <code>&lt;a&gt;</code>, qui signifie <em>ancre</em>.</p>
+        <p>Un lien peut pointer vers :</p>
+        <ul>
+          <li>Un endroit de la page en cours</li>
+          <li>Une autre page du même site</li>
+          <li>Une page d'un autre site sur le Web</li>
+          <li>Une adresse électronique</li>
+          <li>Un fichier à télécharger</li>
+          <li>Un numéro de téléphone</li>
+        </ul>
+
+        <div class="callout" data-icon="💡">
+          <div class="callout-title">Style par défaut des liens</div>
+          <p>Par défaut, les liens apparaissent <strong>soulignés et bleus</strong> (non visité), <strong>pourpres</strong> (visité) et <strong>rouges</strong> (actif). Ces styles peuvent être modifiés en CSS.</p>
+        </div>
+
+        <div class="demo">
+          <div class="demo-header">Aperçu rendu navigateur</div>
+          <div class="demo-body">
+            <p>Voici un <a href="#">lien non visité</a> et voici à quoi ressemble un lien dans son état naturel.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 2 -->
+      <div class="section" id="chemins">
+        <div class="section-label">02 — Chemins</div>
+        <h2>Chemins absolus et relatifs</h2>
+        <p>Le format d'écriture des liens est crucial. Une erreur classique est de référencer une page par son chemin physique — ce qui ne fonctionnera jamais en ligne.</p>
+
+        <div class="callout warn" data-icon="⛔">
+          <div class="callout-title">À ne jamais faire</div>
+          <p><code>&lt;a href="C:\Inetpub\wwwroot\test.html"&gt;</code> — Ce chemin ne fonctionne que sur votre propre machine, jamais sur un serveur.</p>
+        </div>
+
+        <h3>Chemin absolu</h3>
+        <p>Commence par <code>http://</code> ou <code>/</code> (racine du serveur). Obligatoire pour pointer vers un site externe.</p>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"https://www.example.com/page.html"</span><span class="t">&gt;</span>Site externe<span class="t">&lt;/a&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"/images/photo.jpg"</span><span class="t">&gt;</span>Depuis la racine<span class="t">&lt;/a&gt;</span></div>
+
+        <h3>Chemin relatif</h3>
+        <p>Chemin par rapport au répertoire courant de la page. Le <code>..</code> signifie <em>répertoire parent</em>, le <code>.</code> signifie <em>répertoire courant</em>.</p>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"page2.html"</span><span class="t">&gt;</span>Même dossier<span class="t">&lt;/a&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"dossier/page.html"</span><span class="t">&gt;</span>Sous-dossier<span class="t">&lt;/a&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"../index.html"</span><span class="t">&gt;</span>Dossier parent<span class="t">&lt;/a&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"../images/img1.png"</span><span class="t">&gt;</span>Image dans dossier parent<span class="t">&lt;/a&gt;</span></div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Répertoire courant</th><th>Ressource</th><th>Chemin relatif</th><th>Chemin absolu</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>/</code></td><td><code>index.html</code></td><td><code>index.html</code></td><td><code>/index.html</code></td></tr>
+              <tr><td><code>tp1/</code></td><td><code>index.html</code></td><td><code>../index.html</code></td><td><code>/index.html</code></td></tr>
+              <tr><td><code>/</code></td><td><code>page1.html</code></td><td><code>tp1/page1.html</code></td><td><code>/tp1/page1.html</code></td></tr>
+              <tr><td><code>tp1/</code></td><td><code>img1.png</code></td><td><code>../images/img1.png</code></td><td><code>/images/img1.png</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 3 -->
+      <div class="section" id="types">
+        <div class="section-label">03 — Types de liens</div>
+        <h2>Les différents types de liens</h2>
+
+        <div class="link-grid">
+          <div class="link-item">
+            <div class="link-icon">📄</div>
+            <div class="link-name">Page interne</div>
+            <div class="link-desc">Vers une autre page du même site — utiliser des chemins relatifs</div>
+          </div>
+          <div class="link-item">
+            <div class="link-icon">⚓</div>
+            <div class="link-name">Ancre (même page)</div>
+            <div class="link-desc">Vers un endroit précis de la page courante avec <code>#id</code></div>
+          </div>
+          <div class="link-item">
+            <div class="link-icon">🌐</div>
+            <div class="link-name">Site externe</div>
+            <div class="link-desc">Vers un autre site — chemin absolu avec <code>https://</code> obligatoire</div>
+          </div>
+          <div class="link-item">
+            <div class="link-icon">📧</div>
+            <div class="link-name">Email</div>
+            <div class="link-desc">Ouvre le client mail avec <code>mailto:</code></div>
+          </div>
+          <div class="link-item">
+            <div class="link-icon">📞</div>
+            <div class="link-name">Téléphone</div>
+            <div class="link-desc">Utile sur mobile avec <code>tel:</code></div>
+          </div>
+          <div class="link-item">
+            <div class="link-icon">📥</div>
+            <div class="link-name">Téléchargement</div>
+            <div class="link-desc">Force le téléchargement avec l'attribut <code>download</code></div>
+          </div>
+        </div>
+
+        <h3>Lien vers une page interne</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- Même répertoire --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"page2.html"</span><span class="t">&gt;</span>Lien vers page 2<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Dans un sous-dossier --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"dossier1/page1.html"</span><span class="t">&gt;</span>Texte du lien<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Dossier parent --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"../index.html"</span><span class="t">&gt;</span>Retour à l'accueil<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- La balise &lt;a&gt; peut contenir d'autres balises --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"page2.html"</span><span class="t">&gt;</span>
+  <span class="t">&lt;div&gt;</span>
+    <span class="t">&lt;p&gt;</span>Tout ce bloc est cliquable.<span class="t">&lt;/p&gt;</span>
+  <span class="t">&lt;/div&gt;</span>
+<span class="t">&lt;/a&gt;</span></div>
+
+        <h3>Ancre dans la même page</h3>
+        <p>Utile pour les pages longues : on définit d'abord une <strong>ancre</strong> avec l'attribut <code>id</code>, puis on crée un lien vers elle avec <code>#</code>.</p>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- 1. Définir l'ancre cible --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">id</span>=<span class="v">"chapitre2"</span><span class="t">&gt;&lt;/a&gt;</span>
+<span class="t">&lt;h2&gt;</span>Chapitre 2<span class="t">&lt;/h2&gt;</span>
+
+<span class="c">&lt;!-- 2. Créer le lien vers l'ancre --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"#chapitre2"</span><span class="t">&gt;</span>Aller au chapitre 2<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Ancre par défaut : haut de page --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"#top"</span><span class="t">&gt;</span>Retour en haut<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Ancre dans une autre page --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"page.html#chapitre2"</span><span class="t">&gt;</span>Page + ancre<span class="t">&lt;/a&gt;</span></div>
+
+        <h3>Lien externe</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- Ouvre dans le même onglet (défaut) --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"https://www.w3.org"</span><span class="t">&gt;</span>W3C<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Ouvre dans un nouvel onglet --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"https://www.w3.org"</span> <span class="a">target</span>=<span class="v">"_blank"</span><span class="t">&gt;</span>W3C<span class="t">&lt;/a&gt;</span></div>
+
+        <h3>Lien email, téléphone et téléchargement</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- Email simple --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"mailto:contact@site.fr"</span><span class="t">&gt;</span>M'écrire<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Email avec sujet et copie --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"mailto:contact@site.fr?subject=HTML5&cc=autre@site.fr"</span><span class="t">&gt;</span>
+  Email avec sujet
+<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Téléphone (utile sur mobile) --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"tel:+33600000000"</span><span class="t">&gt;</span>+33 6 00 00 00 00<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- Téléchargement PDF --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"./doc/cours.pdf"</span> <span class="a">target</span>=<span class="v">"_blank"</span> <span class="a">download</span><span class="t">&gt;</span>
+  Télécharger le cours
+<span class="t">&lt;/a&gt;</span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 4 -->
+      <div class="section" id="attributs">
+        <div class="section-label">04 — Attributs</div>
+        <h2>Attributs utiles de &lt;a&gt;</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Attribut</th><th>Valeur exemple</th><th>Rôle</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>href</code></td><td><code>"page.html"</code></td><td>URL de destination du lien (obligatoire)</td></tr>
+              <tr><td><code>target</code></td><td><code>"_blank"</code></td><td>Comportement d'ouverture : <code>_self</code> (défaut), <code>_blank</code> (nouvel onglet)</td></tr>
+              <tr><td><code>title</code></td><td><code>"Info bulle"</code></td><td>Affiche une infobulle au survol</td></tr>
+              <tr><td><code>download</code></td><td><em>(booléen)</em></td><td>Force le téléchargement du fichier</td></tr>
+              <tr><td><code>hreflang</code></td><td><code>"en"</code></td><td>Indique la langue de la ressource liée</td></tr>
+              <tr><td><code>type</code></td><td><code>"application/pdf"</code></td><td>Type MIME du document cible (informatif)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 5 -->
+      <div class="section" id="pseudo">
+        <div class="section-label">05 — CSS</div>
+        <h2>Pseudo-classes CSS pour les liens</h2>
+        <p>Une <strong>pseudo-classe</strong> est un mot-clé ajouté à un sélecteur pour cibler un élément dans un <strong>état spécifique</strong>. Syntaxe : <code>sélecteur:pseudoclasse { ... }</code></p>
+
+        <div class="callout" data-icon="⚠️">
+          <div class="callout-title">Ordre obligatoire</div>
+          <p>Pour les liens, les pseudo-classes doivent être déclarées dans cet ordre précis : <code>:link</code> → <code>:visited</code> → <code>:hover</code> → <code>:focus</code> → <code>:active</code></p>
+        </div>
+
+        <div class="pseudo-grid">
+          <div class="pseudo-item">
+            <div class="pseudo-name">a:link</div>
+            <div class="pseudo-desc">Lien non encore visité</div>
+          </div>
+          <div class="pseudo-item">
+            <div class="pseudo-name">a:visited</div>
+            <div class="pseudo-desc">Lien déjà visité</div>
+          </div>
+          <div class="pseudo-item">
+            <div class="pseudo-name">a:hover</div>
+            <div class="pseudo-desc">Curseur de la souris au-dessus</div>
+          </div>
+          <div class="pseudo-item">
+            <div class="pseudo-name">a:focus</div>
+            <div class="pseudo-desc">Lien ciblé au clavier (Tab)</div>
+          </div>
+          <div class="pseudo-item">
+            <div class="pseudo-name">a:active</div>
+            <div class="pseudo-desc">Au moment du clic</div>
+          </div>
+          <div class="pseudo-item">
+            <div class="pseudo-name">p:first-letter</div>
+            <div class="pseudo-desc">Première lettre d'un paragraphe</div>
+          </div>
+        </div>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Styles des liens dans l'ordre correct */</span>
+<span class="s">a:link</span> {
+  color: <span class="v">red</span>;
+  text-transform: <span class="v">uppercase</span>;
+}
+<span class="s">a:visited</span> {
+  color: <span class="v">blue</span>;
+  text-decoration: <span class="v">underline</span>;
+}
+<span class="s">a:hover</span> {
+  font-weight: <span class="v">bold</span>;
+  font-style: <span class="v">italic</span>;
+}
+<span class="s">a:active</span> {
+  text-decoration: <span class="v">underline overline green</span>;
+}
+
+<span class="c">/* Pseudo-classes d'insertion */</span>
+<span class="s">.tel:before</span> { content: <span class="v">'✆ '</span>; }
+<span class="s">.mail:after</span> { content: <span class="v">' 📧'</span>; }
+<span class="s">a:hover:before</span> { content: <span class="v">'⇨'</span>; }
+
+<span class="c">/* Première lettre d'un paragraphe */</span>
+<span class="s">p:first-letter</span> {
+  font-size: <span class="v">1.5em</span>;
+  color: <span class="v">blue</span>;
+}</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 6 -->
+      <div class="section" id="conseils">
+        <div class="section-label">06 — Bonnes pratiques</div>
+        <h2>Conseils de mise en œuvre</h2>
+
+        <h3>✅ Le texte d'un lien doit être compréhensible seul</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- ✅ Bon --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"https://firefox.com"</span><span class="t">&gt;</span>Télécharger Firefox<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- ❌ Mauvais --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"https://firefox.com"</span><span class="t">&gt;</span>Cliquez ici<span class="t">&lt;/a&gt;</span> pour télécharger Firefox</div>
+
+        <h3>✅ N'ajoutez pas « lien vers » dans le texte</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- ✅ Bon --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"..."</span><span class="t">&gt;</span>En savoir plus sur Firefox OS<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- ❌ Mauvais --&gt;</span>
+Voici un <span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"..."</span><span class="t">&gt;</span>lien sur Firefox OS<span class="t">&lt;/a&gt;</span></div>
+
+        <h3>✅ Texte concis, pas d'URL brute</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- ✅ Bon --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"https://careers.mozilla.org"</span><span class="t">&gt;</span>Candidatez chez Mozilla<span class="t">&lt;/a&gt;</span>
+
+<span class="c">&lt;!-- ❌ Mauvais --&gt;</span>
+<span class="t">&lt;a</span> <span class="a">href</span>=<span class="v">"https://careers.mozilla.org"</span><span class="t">&gt;</span>https://careers.mozilla.org<span class="t">&lt;/a&gt;</span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 7 : QUIZ -->
+      <div class="section" id="quiz">
+        <div class="section-label">07 — Quiz</div>
+        <h2>Testez vos connaissances</h2>
+
+        <div class="quiz">
+          <div class="quiz-header">3 questions sur les liens HTML</div>
+          <div class="quiz-body">
+
+            <!-- Q1 -->
+            <div class="quiz-q">
+              <p class="quiz-question">1. Quel attribut définit la destination d'un lien ?</p>
+              <div class="quiz-options">
+                <label class="quiz-option"><input type="radio" name="q1" value="a"> <code>src</code></label>
+                <label class="quiz-option"><input type="radio" name="q1" value="b"> <code>href</code></label>
+                <label class="quiz-option"><input type="radio" name="q1" value="c"> <code>link</code></label>
+                <label class="quiz-option"><input type="radio" name="q1" value="d"> <code>url</code></label>
+              </div>
+              <div id="result1" class="quiz-result"></div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-q">
+              <p class="quiz-question">2. Comment ouvrir un lien dans un nouvel onglet ?</p>
+              <div class="quiz-options">
+                <label class="quiz-option"><input type="radio" name="q2" value="a"> <code>target="_new"</code></label>
+                <label class="quiz-option"><input type="radio" name="q2" value="b"> <code>open="tab"</code></label>
+                <label class="quiz-option"><input type="radio" name="q2" value="c"> <code>target="_blank"</code></label>
+                <label class="quiz-option"><input type="radio" name="q2" value="d"> <code>window="new"</code></label>
+              </div>
+              <div id="result2" class="quiz-result"></div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-q">
+              <p class="quiz-question">3. Quelle syntaxe crée un lien vers une ancre <code>id="section2"</code> ?</p>
+              <div class="quiz-options">
+                <label class="quiz-option"><input type="radio" name="q3" value="a"> <code>href="section2"</code></label>
+                <label class="quiz-option"><input type="radio" name="q3" value="b"> <code>href="@section2"</code></label>
+                <label class="quiz-option"><input type="radio" name="q3" value="c"> <code>href="#section2"</code></label>
+                <label class="quiz-option"><input type="radio" name="q3" value="d"> <code>href="&section2"</code></label>
+              </div>
+              <div id="result3" class="quiz-result"></div>
+            </div>
+
+            <button class="quiz-btn" onclick="checkQuiz()">Vérifier les réponses</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="nav-actions">
+    <a href="cours-html-1.html" class="nav-btn">← Leçon 1</a>
+    <span class="lesson-counter">Leçon 2 / 4</span>
+    <a href="cour3.html" class="nav-btn primary">Leçon 3 →</a>
+  </div>
+
+  <script>
+    // Quiz
+    const answers = { q1: 'b', q2: 'c', q3: 'c' };
+    const feedback = {
+      q1: { ok: '✓ Correct ! href (HyperText Reference) définit l\'URL de destination.', fail: '✗ La bonne réponse est href.' },
+      q2: { ok: '✓ Correct ! target="_blank" ouvre le lien dans un nouvel onglet.', fail: '✗ La bonne réponse est target="_blank".' },
+      q3: { ok: '✓ Correct ! Le # devant l\'id crée un lien vers une ancre.', fail: '✗ La bonne réponse est href="#section2" (avec #).' }
+    };
+
+    function checkQuiz() {
+      ['q1','q2','q3'].forEach((q, i) => {
+        const selected = document.querySelector(`input[name="${q}"]:checked`);
+        const result = document.getElementById(`result${i+1}`);
+        const options = document.querySelectorAll(`input[name="${q}"]`);
+        options.forEach(o => o.closest('.quiz-option').classList.remove('correct','wrong'));
+        if (!selected) { result.textContent = 'Veuillez sélectionner une réponse.'; result.className = 'quiz-result show fail'; return; }
+        const isCorrect = selected.value === answers[q];
+        result.textContent = feedback[q][isCorrect ? 'ok' : 'fail'];
+        result.className = `quiz-result show ${isCorrect ? 'ok' : 'fail'}`;
+        selected.closest('.quiz-option').classList.add(isCorrect ? 'correct' : 'wrong');
+        if (!isCorrect) document.querySelector(`input[name="${q}"][value="${answers[q]}"]`).closest('.quiz-option').classList.add('correct');
+      });
+    }
+
+    // Copy buttons
+    function copyCode(btn) {
+      const block = btn.parentElement;
+      const text = block.innerText.replace('Copier','').replace('Copié !','').trim();
+      navigator.clipboard.writeText(text).then(() => { btn.textContent = 'Copié !'; setTimeout(() => btn.textContent = 'Copier', 2000); });
+    }
+
+    // Sidebar active on scroll
+    const sections = document.querySelectorAll('.section');
+    const links = document.querySelectorAll('.sidebar-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+    });
+  </script>
+
+</body>
+</html>

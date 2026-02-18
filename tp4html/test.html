@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil - Bloc 1 Programmation</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f9;
+            text-align: center;
+        }
+
+        header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        main {
+            padding: 30px;
+        }
+
+        .images-cours {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .cours {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .cours:hover {
+            transform: scale(1.05);
+        }
+
+        .cours img {
+            width: 120px;
+        }
+
+        h2 {
+            color: #1e3a8a;
+            margin-top: 15px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        ol {
+            list-style-position: inside;
+            font-size: 18px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #1e3a8a;
+        }
+
+        footer {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px;
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Bloc 1 - Programmation Web</h1>
+        <p>Bienvenue sur le site des cours HTML, CSS et JavaScript.</p>
+    </header>
+
+    <main>
+
+        <!-- Images des cours -->
+        <section class="images-cours">
+
+            <div class="cours">
+                <a href="courHTML.html">
+                    <img src="Image/html_ill.webp" alt="Cours HTML">
+                    <h2>HTML</h2>
+                </a>
+            </div>
+
+            <div class="cours">
+                <a href="courCSS.html">
+                    <img src="Image/ill_css.png" alt="Cours CSS">
+                    <h2>CSS</h2>
+                </a>
+            </div>
+
+            <div class="cours">
+                <a href="courJAVA.html">
+                    <img src="Image/ill_js.webp" alt="Cours JavaScript">
+                    <h2>JavaScript</h2>
+                </a>
+            </div>
+
+        </section>
+
+        <!-- Description -->
+        <section>
+            <h2>Description du cours</h2>
+            <p>
+                Ce site regroupe les différents cours et travaux pratiques 
+                du module de Programmation Web.
+                Chaque section contient les supports de cours, 
+                les exercices et les travaux pratiques associés.
+            </p>
+        </section>
+
+        <!-- Sommaire -->
+        <section>
+            <h2>Sommaire</h2>
+            <ol>
+                <li><a href="courHTML.html">Cours et TP HTML</a></li>
+                <li><a href="courCSS.html">Cours et TP CSS</a></li>
+                <li><a href="courJAVA.html">Cours et TP JavaScript</a></li>
+            </ol>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 - Bloc 1 Programmation</p>
+    </footer>
+
+</body>
+</html>
+

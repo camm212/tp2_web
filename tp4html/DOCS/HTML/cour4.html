@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cours HTML — Leçon 4</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f4ff;
+      --ink: #0d1b3e;
+      --accent: #2563eb;
+      --accent2: #16a34a;
+      --accent-light: #dbeafe;
+      --muted: #64748b;
+      --card: #e2eafc;
+      --code-bg: #0d1b3e;
+      --code-fg: #e8eeff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--ink); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+    /* HEADER */
+    header { border-bottom: 2px solid var(--ink); padding: 1.2rem 3rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; letter-spacing: -0.02em; }
+    .logo em { font-style: italic; color: var(--accent); }
+    nav { display: flex; gap: 2rem; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+    nav a { color: var(--ink); text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: var(--accent); }
+    .lesson-badge { background: var(--accent); color: white; padding: 0.35rem 0.9rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* HERO */
+    .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 50vh; border-bottom: 2px solid var(--ink); }
+    .hero-left { padding: 5rem 3rem; border-right: 2px solid var(--ink); display: flex; flex-direction: column; justify-content: center; animation: fadeUp 0.8s ease both; }
+    .hero-tag { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .hero-tag::before { content: ''; display: inline-block; width: 30px; height: 2px; background: var(--accent); }
+    h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    h1 em { font-style: italic; color: var(--accent); }
+    .hero-desc { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 420px; }
+    .hero-right { padding: 3rem; display: flex; flex-direction: column; justify-content: center; background: var(--code-bg); color: var(--code-fg); position: relative; overflow: hidden; animation: fadeUp 0.8s 0.2s ease both; }
+    .hero-right::before { content: '<table>'; position: absolute; bottom: -1rem; right: 1rem; font-size: 5rem; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.04); }
+    .code-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 1.5rem; text-transform: uppercase; }
+    .code-hero { font-family: 'DM Mono', monospace; font-size: 0.88rem; line-height: 2; position: relative; z-index: 1; }
+
+    /* Syntax */
+    .t { color: #60a5fa; }
+    .a { color: #93c5fd; }
+    .v { color: #fbbf24; }
+    .c { color: #475569; font-style: italic; }
+    .s { color: #86efac; }
+    .p { color: #f9a8d4; }
+
+    /* MAIN LAYOUT */
+    .main { display: grid; grid-template-columns: 260px 1fr; border-bottom: 2px solid var(--ink); }
+
+    /* SIDEBAR */
+    aside { border-right: 2px solid var(--ink); padding: 2.5rem 0; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; }
+    .aside-title { padding: 0 1.5rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 700; color: var(--muted); text-decoration: none; border-left: 3px solid transparent; transition: all 0.2s; }
+    .sidebar-link:hover { color: var(--ink); background: var(--accent-light); border-left-color: var(--accent); }
+    .sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-light); }
+    .sidebar-link .num { font-family: 'DM Mono', monospace; font-size: 0.7rem; background: var(--ink); color: var(--bg); padding: 0.15rem 0.4rem; min-width: 24px; text-align: center; }
+    .sidebar-link.active .num { background: var(--accent); }
+
+    /* CONTENT */
+    .content { padding: 3rem 4rem; max-width: 820px; animation: fadeUp 0.8s 0.3s ease both; }
+    .section { margin-bottom: 4rem; }
+    .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    h2 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; margin-bottom: 1.25rem; letter-spacing: -0.02em; line-height: 1.15; }
+    h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin: 2rem 0 0.75rem; color: var(--ink); }
+    p { font-size: 1rem; line-height: 1.85; color: #334155; margin-bottom: 1rem; }
+    strong { color: var(--ink); font-weight: 700; }
+    ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+    li { font-size: 1rem; line-height: 1.85; color: #334155; margin-bottom: 0.25rem; }
+
+    /* CODE BLOCKS */
+    .code-block { background: var(--code-bg); color: var(--code-fg); padding: 1.75rem 2rem; font-family: 'DM Mono', monospace; font-size: 0.85rem; line-height: 1.9; margin: 1.5rem 0; position: relative; border-left: 4px solid var(--accent); overflow-x: auto; white-space: pre; }
+    .copy-btn { position: absolute; top: 0.75rem; right: 1rem; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; font-family: 'Syne', sans-serif; user-select: none; white-space: nowrap; }
+    .copy-btn:hover { color: #60a5fa; }
+    code { font-family: 'DM Mono', monospace; background: var(--accent-light); color: var(--accent); padding: 0.15em 0.45em; font-size: 0.88em; }
+
+    /* CALLOUT */
+    .callout { border: 2px solid var(--ink); padding: 1.5rem 2rem; margin: 2rem 0; position: relative; background: var(--card); }
+    .callout::before { content: attr(data-icon); position: absolute; top: -0.9rem; left: 1.5rem; background: var(--bg); padding: 0 0.5rem; font-size: 1.1rem; }
+    .callout-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; color: var(--accent2); }
+    .callout p { color: var(--muted); margin: 0; font-size: 0.9rem; }
+    .callout.warn .callout-title { color: #b45309; }
+    .callout.info .callout-title { color: var(--accent); }
+
+    /* REFERENCE TABLE */
+    .table-wrap { overflow-x: auto; margin: 2rem 0; }
+    .ref-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .ref-table th { background: var(--ink); color: var(--bg); padding: 0.85rem 1rem; text-align: left; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .ref-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--card); color: #334155; vertical-align: top; }
+    .ref-table tr:hover td { background: var(--accent-light); }
+    .ref-table td code { background: none; color: var(--accent); padding: 0; }
+
+    /* SELECTOR TABLE */
+    .sel-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1.5rem 0; }
+    .sel-table th { background: var(--ink); color: var(--bg); padding: 0.85rem 1rem; text-align: left; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .sel-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--card); color: #334155; }
+    .sel-table tr:hover td { background: var(--accent-light); }
+    .sel-table td:first-child { font-family: 'DM Mono', monospace; color: var(--accent); font-size: 0.9rem; }
+
+    /* PSEUDO TABLE */
+    .pseudo-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1.5rem 0; }
+    .pseudo-table th { background: var(--ink); color: var(--bg); padding: 0.75rem 1rem; text-align: left; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .pseudo-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--card); color: #334155; }
+    .pseudo-table tr:hover td { background: var(--accent-light); }
+    .pseudo-table td:first-child { font-family: 'DM Mono', monospace; color: var(--accent); font-size: 0.82rem; }
+
+    /* DEMO TABLES */
+    .demo { border: 2px solid var(--ink); margin: 2rem 0; }
+    .demo-header { background: var(--ink); color: var(--bg); padding: 0.75rem 1.5rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .demo-body { padding: 1.5rem 2rem; overflow-x: auto; }
+
+    /* Demo tables styling */
+    .dtable { border-collapse: collapse; font-size: 0.9rem; margin: 0.5rem 0; }
+    .dtable td, .dtable th { border: 1px solid var(--ink); padding: 0.5rem 1rem; }
+    .dtable th { background: var(--ink); color: var(--bg); font-weight: 700; }
+    .dtable caption { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; font-style: italic; }
+
+    /* Striped demo */
+    .striped-table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+    .striped-table th { background: #7c3aed; color: white; padding: 0.6rem 1rem; text-align: left; }
+    .striped-table td { padding: 0.6rem 1rem; }
+    .striped-table tr:nth-child(even) td { background: #f5f3ff; }
+    .striped-table tr:nth-child(odd) td { background: #ede9fe; }
+    .striped-table td:first-child { background: white !important; font-weight: 700; }
+    .striped-table tr:hover td { background: #ddd6fe !important; }
+
+    /* Hover demo */
+    .hover-table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+    .hover-table th { background: var(--ink); color: var(--bg); padding: 0.6rem 1rem; text-align: left; }
+    .hover-table td { padding: 0.6rem 1rem; border: 1px solid var(--card); transition: background 0.2s; }
+    .hover-table tr:hover td { background: #ccffcc; }
+    .hover-table td:hover { background: aquamarine !important; }
+
+    /* PROGRESS */
+    .progress-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .progress-bar { height: 4px; background: var(--card); margin-bottom: 3rem; }
+    .progress-fill { height: 100%; background: var(--accent); width: 41%; transition: width 1s ease; }
+
+    /* DIVIDER */
+    .divider { height: 2px; background: var(--card); margin: 3rem 0; }
+
+    /* QUIZ */
+    .quiz { border: 2px solid var(--ink); margin: 2rem 0; }
+    .quiz-header { background: var(--ink); color: var(--bg); padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .quiz-body { padding: 1.5rem; }
+    .quiz-q { margin-bottom: 2rem; }
+    .quiz-question { font-weight: 700; margin-bottom: 1rem; font-size: 0.95rem; }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .quiz-option { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border: 1.5px solid var(--card); cursor: pointer; font-size: 0.9rem; transition: all 0.2s; background: var(--bg); }
+    .quiz-option:hover { border-color: var(--accent); background: var(--accent-light); }
+    .quiz-option.correct { border-color: var(--accent2); background: #dcfce7; color: var(--accent2); }
+    .quiz-option.wrong { border-color: #dc2626; background: #fee2e2; color: #dc2626; }
+    .quiz-option input[type="radio"] { accent-color: var(--accent); }
+    .quiz-btn { margin-top: 1rem; background: var(--ink); color: var(--bg); border: none; padding: 0.85rem 2rem; font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+    .quiz-btn:hover { background: var(--accent); }
+    .quiz-result { display: none; margin-top: 1rem; font-weight: 700; font-size: 0.9rem; }
+    .quiz-result.show { display: block; }
+    .quiz-result.ok { color: var(--accent2); }
+    .quiz-result.fail { color: #dc2626; }
+
+    /* NAV */
+    .nav-actions { display: flex; justify-content: space-between; align-items: center; padding: 2rem 4rem; border-top: 2px solid var(--ink); }
+    .lesson-counter { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .nav-btn { display: flex; align-items: center; gap: 0.75rem; background: none; border: 2px solid var(--ink); padding: 0.85rem 1.5rem; font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; color: var(--ink); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--ink); color: var(--bg); }
+    .nav-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+    .nav-btn.primary:hover { background: var(--ink); border-color: var(--ink); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 1024px) { .content { padding: 2.5rem; } }
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .main { grid-template-columns: 1fr; }
+      aside { display: none; }
+      .content { padding: 1.5rem; }
+      header { padding: 1rem 1.5rem; }
+      nav { display: none; }
+      .nav-actions { padding: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+      h1 { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">HTML<em>Academy</em></div>
+    <nav>
+      <a href="#">Cours</a>
+      <a href="#">Référence</a>
+      <a href="#">Exercices</a>
+    </nav>
+    <span class="lesson-badge">Leçon 04 / 4</span>
+  </header>
+
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-tag">Les tableaux HTML & CSS</div>
+      <h1>La balise <em>&lt;table&gt;</em></h1>
+      <p class="hero-desc">Créez des tableaux de données structurés, maîtrisez la fusion de cellules, les sélecteurs hiérarchiques et la mise en forme CSS des tableaux.</p>
+    </div>
+    <div class="hero-right">
+      <div class="code-label">// structure d'un tableau</div>
+      <pre class="code-hero"><span class="t">&lt;table&gt;</span>
+  <span class="t">&lt;thead&gt;</span>
+    <span class="t">&lt;tr&gt;</span>
+      <span class="t">&lt;th&gt;</span>Nom<span class="t">&lt;/th&gt;</span>
+      <span class="t">&lt;th&gt;</span>Valeur<span class="t">&lt;/th&gt;</span>
+    <span class="t">&lt;/tr&gt;</span>
+  <span class="t">&lt;/thead&gt;</span>
+  <span class="t">&lt;tbody&gt;</span>
+    <span class="t">&lt;tr&gt;</span>
+      <span class="t">&lt;td</span> <span class="a">colspan</span>=<span class="v">"2"</span><span class="t">&gt;</span>Fusionné<span class="t">&lt;/td&gt;</span>
+    <span class="t">&lt;/tr&gt;</span>
+  <span class="t">&lt;/tbody&gt;</span>
+  <span class="t">&lt;tfoot&gt;</span>
+    <span class="t">&lt;tr&gt;&lt;td&gt;</span>Pied<span class="t">&lt;/td&gt;&lt;/tr&gt;</span>
+  <span class="t">&lt;/tfoot&gt;</span>
+<span class="t">&lt;/table&gt;</span></pre>
+    </div>
+  </section>
+
+  <div class="main">
+    <aside>
+      <div class="aside-title">Dans cette leçon</div>
+      <a href="#intro" class="sidebar-link active"><span class="num">01</span> Introduction</a>
+      <a href="#balises" class="sidebar-link"><span class="num">02</span> Balises de base</a>
+      <a href="#fusion" class="sidebar-link"><span class="num">03</span> Fusion de cellules</a>
+      <a href="#structure" class="sidebar-link"><span class="num">04</span> Structure logique</a>
+      <a href="#colgroup" class="sidebar-link"><span class="num">05</span> &lt;colgroup&gt;</a>
+      <a href="#bordures" class="sidebar-link"><span class="num">06</span> Bordures & héritage</a>
+      <a href="#selecteurs" class="sidebar-link"><span class="num">07</span> Sélecteurs hiérarchiques</a>
+      <a href="#pseudo" class="sidebar-link"><span class="num">08</span> Pseudo-classes</a>
+      <a href="#autresprops" class="sidebar-link"><span class="num">09</span> Autres propriétés CSS</a>
+      <a href="#quiz" class="sidebar-link"><span class="num">10</span> Quiz</a>
+    </aside>
+
+    <div class="content">
+
+      <div class="progress-label">Progression du cours</div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+
+      <!-- SECTION 1 -->
+      <div class="section" id="intro">
+        <div class="section-label">01 — Introduction</div>
+        <h2>Les tableaux en HTML5</h2>
+        <p>En HTML5, les tableaux sont <strong>exclusivement réservés à la présentation de données</strong>. Ils ne doivent pas être utilisés pour réaliser la mise en page d'un site — c'est le rôle du CSS.</p>
+
+        <div class="callout warn" data-icon="⚠️">
+          <div class="callout-title">À ne pas confondre</div>
+          <p>Les tableaux HTML servent à présenter des <strong>données structurées</strong> (comme un tableur). Ne pas confondre avec les tableaux/arrays des langages de programmation (C, Java…). Depuis HTML4, les attributs de présentation (<code>width</code>, <code>border</code>, <code>cellpadding</code>…) sont supprimés — tout doit passer par le CSS.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 2 -->
+      <div class="section" id="balises">
+        <div class="section-label">02 — Balises de base</div>
+        <h2>Les balises du tableau</h2>
+        <p>Un tableau <code>&lt;table&gt;</code> contient des lignes <code>&lt;tr&gt;</code> (<em>table row</em>), qui contiennent des cellules <code>&lt;td&gt;</code> ou des en-têtes <code>&lt;th&gt;</code>.</p>
+
+        <div class="table-wrap">
+          <table class="ref-table">
+            <thead>
+              <tr><th>Balise</th><th>Rôle</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>&lt;table&gt;</code></td><td>Conteneur principal du tableau</td></tr>
+              <tr><td><code>&lt;tr&gt;</code></td><td>Ligne du tableau (<em>table row</em>)</td></tr>
+              <tr><td><code>&lt;td&gt;</code></td><td>Cellule de données (<em>table data</em>)</td></tr>
+              <tr><td><code>&lt;th&gt;</code></td><td>Cellule d'en-tête — texte en gras et centré par défaut</td></tr>
+              <tr><td><code>&lt;caption&gt;</code></td><td>Légende du tableau, placée après <code>&lt;table&gt;</code></td></tr>
+              <tr><td><code>&lt;colgroup&gt;</code></td><td>Groupement de colonnes pour mise en forme CSS</td></tr>
+              <tr><td><code>&lt;thead&gt;</code></td><td>En-tête logique du tableau</td></tr>
+              <tr><td><code>&lt;tbody&gt;</code></td><td>Corps logique du tableau</td></tr>
+              <tr><td><code>&lt;tfoot&gt;</code></td><td>Pied logique du tableau</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- Tableau simple 2 lignes × 2 colonnes --&gt;</span>
+<span class="t">&lt;table&gt;</span>
+  <span class="t">&lt;tr&gt;</span>
+    <span class="t">&lt;td&gt;</span>1<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>2<span class="t">&lt;/td&gt;</span>
+  <span class="t">&lt;/tr&gt;</span>
+  <span class="t">&lt;tr&gt;</span>
+    <span class="t">&lt;td&gt;</span>3<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>4<span class="t">&lt;/td&gt;</span>
+  <span class="t">&lt;/tr&gt;</span>
+<span class="t">&lt;/table&gt;</span></div>
+
+        <div class="demo">
+          <div class="demo-header">Rendu — tableau basique avec en-têtes</div>
+          <div class="demo-body">
+            <table class="dtable">
+              <caption>Légende du tableau avec &lt;caption&gt;</caption>
+              <tr><th>Attribut</th><th>Fonction</th></tr>
+              <tr><td>colspan</td><td>Fusion de colonnes</td></tr>
+              <tr><td>rowspan</td><td>Fusion de lignes</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 3 -->
+      <div class="section" id="fusion">
+        <div class="section-label">03 — Fusion</div>
+        <h2>Fusion de cellules</h2>
+        <p>Les attributs <code>colspan</code> et <code>rowspan</code> permettent de fusionner des cellules horizontalement ou verticalement.</p>
+
+        <div class="table-wrap">
+          <table class="ref-table">
+            <thead>
+              <tr><th>Attribut</th><th>Direction</th><th>Exemple</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>colspan="x"</code></td><td>Horizontale — fusionne x colonnes</td><td><code>&lt;td colspan="3"&gt;</code></td></tr>
+              <tr><td><code>rowspan="x"</code></td><td>Verticale — fusionne x lignes</td><td><code>&lt;td rowspan="2"&gt;</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- colspan : fusion horizontale --&gt;</span>
+<span class="t">&lt;table&gt;</span>
+  <span class="t">&lt;tr&gt;</span>
+    <span class="t">&lt;td</span> <span class="a">colspan</span>=<span class="v">"3"</span><span class="t">&gt;</span>Titre sur 3 colonnes<span class="t">&lt;/td&gt;</span>
+  <span class="t">&lt;/tr&gt;</span>
+  <span class="t">&lt;tr&gt;</span>
+    <span class="t">&lt;td&gt;</span>A<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>B<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>C<span class="t">&lt;/td&gt;</span>
+  <span class="t">&lt;/tr&gt;</span>
+<span class="t">&lt;/table&gt;</span>
+
+<span class="c">&lt;!-- rowspan : fusion verticale --&gt;</span>
+<span class="t">&lt;table&gt;</span>
+  <span class="t">&lt;tr&gt;</span>
+    <span class="t">&lt;td</span> <span class="a">rowspan</span>=<span class="v">"2"</span><span class="t">&gt;</span>1<span class="t">&lt;/td&gt;</span>
+    <span class="t">&lt;td&gt;</span>2<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>3<span class="t">&lt;/td&gt;</span>
+  <span class="t">&lt;/tr&gt;</span>
+  <span class="t">&lt;tr&gt;</span>
+    <span class="t">&lt;td&gt;</span>5<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>6<span class="t">&lt;/td&gt;</span>
+  <span class="t">&lt;/tr&gt;</span>
+<span class="t">&lt;/table&gt;</span></div>
+
+        <div class="demo">
+          <div class="demo-header">Rendu — tableaux à double entrée avec scope</div>
+          <div class="demo-body">
+            <table class="dtable" style="margin-bottom:1rem;">
+              <caption>Températures moyennes (°C)</caption>
+              <tr>
+                <td>&nbsp;</td>
+                <th scope="col">Paris</th>
+                <th scope="col">Marseille</th>
+                <th scope="col">Lyon</th>
+              </tr>
+              <tr>
+                <th scope="row">Juin</th>
+                <td>22°C</td><td>28°C</td><td>26°C</td>
+              </tr>
+              <tr>
+                <th scope="row">Juillet</th>
+                <td>24°C</td><td>30°C</td><td>28°C</td>
+              </tr>
+            </table>
+            <p style="font-size:0.8rem;color:var(--muted);">Tableau à double entrée avec <code>scope="col"</code> et <code>scope="row"</code> pour l'accessibilité.</p>
+          </div>
+        </div>
+
+        <div class="callout" data-icon="♿">
+          <div class="callout-title">Accessibilité — attribut scope</div>
+          <p>Pour les tableaux à double entrée, utilisez <code>scope="col"</code> sur les en-têtes de colonne et <code>scope="row"</code> sur les en-têtes de ligne. Cela associe correctement les données à leurs en-têtes pour les lecteurs d'écran.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 4 -->
+      <div class="section" id="structure">
+        <div class="section-label">04 — Structure</div>
+        <h2>Structurer son tableau</h2>
+        <p>Les balises <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code> et <code>&lt;tfoot&gt;</code> structurent logiquement le tableau. Elles n'affectent pas le visuel mais améliorent la sémantique, l'accessibilité et permettent un ciblage CSS précis.</p>
+
+        <div class="callout info" data-icon="📋">
+          <div class="callout-title">Ordre à respecter</div>
+          <p>L'ordre doit toujours être : <code>&lt;thead&gt;</code> → <code>&lt;tbody&gt;</code> → <code>&lt;tfoot&gt;</code>. Le <code>&lt;tfoot&gt;</code> peut contenir des remarques, totaux ou légendes de bas de tableau.</p>
+        </div>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="t">&lt;table&gt;</span>
+  <span class="t">&lt;thead&gt;</span>
+    <span class="t">&lt;tr&gt;</span>
+      <span class="t">&lt;th</span> <span class="a">colspan</span>=<span class="v">"2"</span><span class="t">&gt;</span>Titre du tableau<span class="t">&lt;/th&gt;</span>
+    <span class="t">&lt;/tr&gt;</span>
+  <span class="t">&lt;/thead&gt;</span>
+
+  <span class="t">&lt;tbody&gt;</span>
+    <span class="t">&lt;tr&gt;</span>
+      <span class="t">&lt;td&gt;</span>colspan<span class="t">&lt;/td&gt;</span>
+      <span class="t">&lt;td&gt;</span>fusion de colonnes<span class="t">&lt;/td&gt;</span>
+    <span class="t">&lt;/tr&gt;</span>
+    <span class="t">&lt;tr&gt;</span>
+      <span class="t">&lt;td&gt;</span>rowspan<span class="t">&lt;/td&gt;</span>
+      <span class="t">&lt;td&gt;</span>fusion de lignes<span class="t">&lt;/td&gt;</span>
+    <span class="t">&lt;/tr&gt;</span>
+  <span class="t">&lt;/tbody&gt;</span>
+
+  <span class="t">&lt;tfoot&gt;</span>
+    <span class="t">&lt;tr&gt;</span>
+      <span class="t">&lt;td</span> <span class="a">colspan</span>=<span class="v">"2"</span><span class="t">&gt;</span>Pied de tableau<span class="t">&lt;/td&gt;</span>
+    <span class="t">&lt;/tr&gt;</span>
+  <span class="t">&lt;/tfoot&gt;</span>
+<span class="t">&lt;/table&gt;</span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 5 -->
+      <div class="section" id="colgroup">
+        <div class="section-label">05 — Colgroup</div>
+        <h2>La balise &lt;colgroup&gt;</h2>
+        <p><code>&lt;colgroup&gt;</code> permet de grouper des colonnes pour leur appliquer un style CSS commun. Elle se place juste après <code>&lt;table&gt;</code> (ou <code>&lt;caption&gt;</code>) et avant les lignes <code>&lt;tr&gt;</code>. L'attribut <code>span="x"</code> définit le nombre de colonnes groupées.</p>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="t">&lt;table&gt;</span>
+  <span class="c">&lt;!-- 1re colonne en cyan, 2 suivantes en bisque --&gt;</span>
+  <span class="t">&lt;colgroup</span> <span class="a">span</span>=<span class="v">"1"</span> <span class="a">style</span>=<span class="v">"background-color: cyan"</span><span class="t">&gt;&lt;/colgroup&gt;</span>
+  <span class="t">&lt;colgroup</span> <span class="a">span</span>=<span class="v">"2"</span> <span class="a">style</span>=<span class="v">"background-color: bisque"</span><span class="t">&gt;&lt;/colgroup&gt;</span>
+  <span class="t">&lt;tr&gt;</span>
+    <span class="t">&lt;td&gt;</span>1<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>2<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>3<span class="t">&lt;/td&gt;</span>
+  <span class="t">&lt;/tr&gt;</span>
+  <span class="t">&lt;tr&gt;</span>
+    <span class="t">&lt;td&gt;</span>4<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>5<span class="t">&lt;/td&gt;</span> <span class="t">&lt;td&gt;</span>6<span class="t">&lt;/td&gt;</span>
+  <span class="t">&lt;/tr&gt;</span>
+<span class="t">&lt;/table&gt;</span></div>
+
+        <div class="demo">
+          <div class="demo-header">Rendu — colgroup avec couleurs de colonnes</div>
+          <div class="demo-body">
+            <table class="dtable">
+              <colgroup span="1" style="background-color:cyan"></colgroup>
+              <colgroup span="2" style="background-color:bisque"></colgroup>
+              <tr><td>1</td><td>2</td><td>3</td></tr>
+              <tr><td>4</td><td>5</td><td>6</td></tr>
+              <tr><td>7</td><td>8</td><td>9</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 6 -->
+      <div class="section" id="bordures">
+        <div class="section-label">06 — CSS & Héritage</div>
+        <h2>Bordures et héritage CSS</h2>
+        <p>Un principe fondamental du CSS : les <strong>éléments enfants héritent</strong> des propriétés de leur parent. Mais toutes les propriétés ne sont pas héritables !</p>
+
+        <div class="callout info" data-icon="💡">
+          <div class="callout-title">Propriétés héritables vs non-héritables</div>
+          <p><code>color</code> est héritable → se propage automatiquement aux enfants. <code>border</code> n'est <strong>pas héritable</strong> → doit être répétée sur chaque élément ciblé. La balise <code>&lt;tr&gt;</code> ne peut pas recevoir de bordure.</p>
+        </div>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* color héritée par td et th, border non */</span>
+<span class="s">#T1</span> {
+  <span class="p">color</span>: <span class="v">red</span>;
+  <span class="p">border-style</span>: <span class="v">groove</span>;   <span class="c">/* appliqué uniquement sur &lt;table&gt; */</span>
+}
+
+<span class="c">/* Pour bordurer les cellules : répéter sur td/th */</span>
+<span class="s">#T1 td, #T1 th</span> {         <span class="c">/* sélecteur hiérarchique */</span>
+  <span class="p">border-style</span>: <span class="v">groove</span>;
+}
+
+<span class="c">/* Style différent pour chaque tableau */</span>
+<span class="s">#T2 td, #T2 th</span> {
+  <span class="p">border-style</span>: <span class="v">dotted</span>;
+}</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 7 -->
+      <div class="section" id="selecteurs">
+        <div class="section-label">07 — Sélecteurs</div>
+        <h2>Les sélecteurs hiérarchiques CSS</h2>
+        <p>Les sélecteurs hiérarchiques permettent de cibler un élément selon sa position dans l'arbre HTML.</p>
+
+        <div class="table-wrap">
+          <table class="sel-table">
+            <thead>
+              <tr><th>Syntaxe</th><th>Nom</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A B</td>
+                <td>Descendants</td>
+                <td>Sélectionne tout élément B descendant d'un élément A (à n'importe quelle profondeur)</td>
+              </tr>
+              <tr>
+                <td>A &gt; B</td>
+                <td>Enfants directs</td>
+                <td>Sélectionne tout élément B enfant <strong>direct</strong> d'un élément A uniquement</td>
+              </tr>
+              <tr>
+                <td>A + B</td>
+                <td>Frère adjacent</td>
+                <td>Sélectionne tout élément B immédiatement précédé d'un élément A (même niveau)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Exemple A B — tous les descendants</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Tous les &lt;p&gt; dans une &lt;div&gt;, même imbriqués */</span>
+<span class="s">div p</span> {
+  <span class="p">color</span>: <span class="v">white</span>;
+  <span class="p">background-color</span>: <span class="v">black</span>;
+}</div>
+
+        <h3>Exemple A &gt; B — enfants directs seulement</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Uniquement les &lt;p&gt; directement dans &lt;div&gt; */</span>
+<span class="s">div &gt; p</span> {
+  <span class="p">color</span>: <span class="v">white</span>;
+  <span class="p">background-color</span>: <span class="v">black</span>;
+}</div>
+
+        <h3>Exemple A + B — frère adjacent</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Le &lt;p&gt; qui suit immédiatement une &lt;div&gt; */</span>
+<span class="s">div + p</span> {
+  <span class="p">color</span>: <span class="v">white</span>;
+  <span class="p">background-color</span>: <span class="v">black</span>;
+}</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 8 -->
+      <div class="section" id="pseudo">
+        <div class="section-label">08 — Pseudo-classes</div>
+        <h2>Pseudo-classes de sélection</h2>
+        <p>Ces pseudo-classes sont particulièrement utiles pour la mise en forme de tableaux, notamment pour alterner les couleurs de lignes.</p>
+
+        <div class="table-wrap">
+          <table class="pseudo-table">
+            <thead>
+              <tr><th>Pseudo-classe</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>:root</td><td>Élément racine du document (<code>&lt;html&gt;</code> en HTML5)</td></tr>
+              <tr><td>:empty</td><td>Éléments vides sans enfants</td></tr>
+              <tr><td>:only-child</td><td>Enfant unique (sans frère)</td></tr>
+              <tr><td>:first-child</td><td>Premier élément enfant</td></tr>
+              <tr><td>:last-child</td><td>Dernier élément enfant</td></tr>
+              <tr><td>:nth-child(n)</td><td>Le nième enfant — accepte un nombre, <code>even</code> (pairs) ou <code>odd</code> (impairs)</td></tr>
+              <tr><td>:nth-last-child(n)</td><td>Le nième enfant en partant de la fin</td></tr>
+              <tr><td>:first-of-type</td><td>Premier élément de ce type</td></tr>
+              <tr><td>:last-of-type</td><td>Dernier élément de ce type</td></tr>
+              <tr><td>:nth-of-type(n)</td><td>Le nième élément de ce type</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Lignes alternées + en-tête colorée */</span>
+<span class="s">#T3 tr:first-child</span> {
+  <span class="p">background-color</span>: <span class="v">brown</span> <span class="v">!important</span>;   <span class="c">/* prioritaire */</span>
+}
+<span class="s">#T3 tr:nth-child(even)</span> {
+  <span class="p">background-color</span>: <span class="v">beige</span>;
+}
+<span class="s">#T3 tr:nth-child(odd)</span> {
+  <span class="p">background-color</span>: <span class="v">burlywood</span>;
+}
+<span class="s">#T3 td:first-child</span> {
+  <span class="p">background-color</span>: <span class="v">white</span>;   <span class="c">/* 1re colonne blanche */</span>
+}</div>
+
+        <div class="callout info" data-icon="❗">
+          <div class="callout-title">Le mot-clé !important</div>
+          <p><code>!important</code> force l'application d'une propriété en priorité sur toutes les autres règles CSS. Dans l'exemple ci-dessus, la couleur <code>brown</code> de la première ligne passe avant les couleurs <code>even</code>/<code>odd</code>. À utiliser avec parcimonie.</p>
+        </div>
+
+        <div class="demo">
+          <div class="demo-header">Démo interactive — lignes alternées + survol</div>
+          <div class="demo-body">
+            <table class="striped-table" style="width:100%;border-collapse:collapse;">
+              <tr><th>Ville</th><th>Juin</th><th>Juillet</th><th>Août</th></tr>
+              <tr><td>Paris</td><td>22°C</td><td>24°C</td><td>23°C</td></tr>
+              <tr><td>Marseille</td><td>28°C</td><td>30°C</td><td>29°C</td></tr>
+              <tr><td>Lyon</td><td>26°C</td><td>28°C</td><td>27°C</td></tr>
+              <tr><td>Bordeaux</td><td>25°C</td><td>27°C</td><td>26°C</td></tr>
+            </table>
+            <p style="margin-top:0.75rem;font-size:0.8rem;color:var(--muted);">Lignes alternées avec <code>:nth-child(even/odd)</code>. Survolez une ligne pour voir l'effet <code>:hover</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 9 -->
+      <div class="section" id="autresprops">
+        <div class="section-label">09 — Autres propriétés CSS</div>
+        <h2>Propriétés CSS spécifiques aux tableaux</h2>
+
+        <h3>Centrage, largeur et bordures</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Tableau centré, 80% de largeur, texte centré */</span>
+<span class="s">#tableau</span> {
+  <span class="p">width</span>: <span class="v">80%</span>;
+  <span class="p">margin</span>: <span class="v">auto</span>;
+  <span class="p">text-align</span>: <span class="v">center</span>;
+}
+
+<span class="c">/* Coller les bordures des cellules */</span>
+<span class="s">#tableau</span> {
+  <span class="p">border-collapse</span>: <span class="v">collapse</span>;  <span class="c">/* supprime l'espace entre cellules */</span>
+}
+
+<span class="c">/* Espacer les cellules */</span>
+<span class="s">#tableau</span> {
+  <span class="p">border-spacing</span>: <span class="v">5px</span>;          <span class="c">/* espace entre cellules */</span>
+}</div>
+
+        <h3>Hauteur, largeur fixe et alignement vertical</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Largeur uniforme des colonnes */</span>
+<span class="s">#tableau</span> {
+  <span class="p">height</span>: <span class="v">200px</span>;
+  <span class="p">table-layout</span>: <span class="v">fixed</span>;   <span class="c">/* colonnes de largeur égale */</span>
+}
+
+<span class="c">/* Alignement vertical du contenu des cellules */</span>
+<span class="s">#tableau td, #tableau th</span> {
+  <span class="p">vertical-align</span>: <span class="v">top</span>;    <span class="c">/* top | middle (défaut) | bottom */</span>
+}
+
+<span class="c">/* Position de la légende */</span>
+<span class="s">#tableau</span> {
+  <span class="p">caption-side</span>: <span class="v">bottom</span>;   <span class="c">/* top (défaut) ou bottom */</span>
+}</div>
+
+        <div class="demo">
+          <div class="demo-header">Démo interactive — survol ligne et cellule</div>
+          <div class="demo-body">
+            <table class="hover-table" style="width:100%;">
+              <tr><th>Langage</th><th>Type</th><th>Créé en</th></tr>
+              <tr><td>HTML</td><td>Balisage</td><td>1993</td></tr>
+              <tr><td>CSS</td><td>Feuille de style</td><td>1996</td></tr>
+              <tr><td>JavaScript</td><td>Script</td><td>1995</td></tr>
+              <tr><td>PHP</td><td>Serveur</td><td>1994</td></tr>
+            </table>
+            <p style="margin-top:0.75rem;font-size:0.8rem;color:var(--muted);">Survolez une ligne (vert clair) ou une cellule (aquamarine) pour voir les effets <code>tr:hover</code> et <code>td:hover</code>.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-top:2rem;">
+          <table class="ref-table">
+            <thead>
+              <tr><th>Propriété CSS</th><th>Valeurs courantes</th><th>Effet</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>border-collapse</code></td><td><code>collapse</code> | <code>separate</code></td><td>Fusionne ou sépare les bordures des cellules</td></tr>
+              <tr><td><code>border-spacing</code></td><td><code>5px</code></td><td>Espace entre les cellules (si <code>separate</code>)</td></tr>
+              <tr><td><code>table-layout</code></td><td><code>fixed</code> | <code>auto</code></td><td>Largeur uniforme (<code>fixed</code>) ou adaptée au contenu (<code>auto</code>)</td></tr>
+              <tr><td><code>caption-side</code></td><td><code>top</code> | <code>bottom</code></td><td>Position de la légende <code>&lt;caption&gt;</code></td></tr>
+              <tr><td><code>vertical-align</code></td><td><code>top</code> | <code>middle</code> | <code>bottom</code></td><td>Alignement vertical du contenu dans les cellules</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 10 : QUIZ -->
+      <div class="section" id="quiz">
+        <div class="section-label">10 — Quiz</div>
+        <h2>Testez vos connaissances</h2>
+
+        <div class="quiz">
+          <div class="quiz-header">3 questions sur les tableaux HTML/CSS</div>
+          <div class="quiz-body">
+
+            <!-- Q1 -->
+            <div class="quiz-q">
+              <p class="quiz-question">1. Quel attribut permet de fusionner 3 colonnes horizontalement ?</p>
+              <div class="quiz-options">
+                <label class="quiz-option"><input type="radio" name="q1" value="a"> <code>rowspan="3"</code></label>
+                <label class="quiz-option"><input type="radio" name="q1" value="b"> <code>colspan="3"</code></label>
+                <label class="quiz-option"><input type="radio" name="q1" value="c"> <code>merge="3"</code></label>
+                <label class="quiz-option"><input type="radio" name="q1" value="d"> <code>span="3"</code></label>
+              </div>
+              <div id="result1" class="quiz-result"></div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-q">
+              <p class="quiz-question">2. Quel sélecteur CSS cible uniquement les enfants <strong>directs</strong> d'un élément ?</p>
+              <div class="quiz-options">
+                <label class="quiz-option"><input type="radio" name="q2" value="a"> <code>A B</code></label>
+                <label class="quiz-option"><input type="radio" name="q2" value="b"> <code>A + B</code></label>
+                <label class="quiz-option"><input type="radio" name="q2" value="c"> <code>A &gt; B</code></label>
+                <label class="quiz-option"><input type="radio" name="q2" value="d"> <code>A ~ B</code></label>
+              </div>
+              <div id="result2" class="quiz-result"></div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-q">
+              <p class="quiz-question">3. Quelle propriété CSS colle les bordures des cellules entre elles ?</p>
+              <div class="quiz-options">
+                <label class="quiz-option"><input type="radio" name="q3" value="a"> <code>border-spacing: 0</code></label>
+                <label class="quiz-option"><input type="radio" name="q3" value="b"> <code>table-layout: fixed</code></label>
+                <label class="quiz-option"><input type="radio" name="q3" value="c"> <code>border-collapse: collapse</code></label>
+                <label class="quiz-option"><input type="radio" name="q3" value="d"> <code>vertical-align: top</code></label>
+              </div>
+              <div id="result3" class="quiz-result"></div>
+            </div>
+
+            <button class="quiz-btn" onclick="checkQuiz()">Vérifier les réponses</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="nav-actions">
+    <a href="cours-html-3.html" class="nav-btn">← Leçon 3</a>
+    <span class="lesson-counter">Leçon 4 / 4</span>
+    <a href="cour1.html" class="nav-btn primary">Leçon 1→</a>
+  </div>
+
+  <script>
+    const answers = { q1: 'b', q2: 'c', q3: 'c' };
+    const feedback = {
+      q1: { ok: '✓ Correct ! colspan="3" fusionne 3 colonnes horizontalement.', fail: '✗ La bonne réponse est colspan="3". rowspan fusionne des lignes (vertical).' },
+      q2: { ok: '✓ Correct ! A > B cible les enfants directs uniquement. A B cible tous les descendants.', fail: '✗ La bonne réponse est A > B. Le symbole > signifie enfant direct.' },
+      q3: { ok: '✓ Correct ! border-collapse: collapse supprime l\'espace entre les cellules et fusionne leurs bordures.', fail: '✗ La bonne réponse est border-collapse: collapse.' }
+    };
+
+    function checkQuiz() {
+      ['q1','q2','q3'].forEach((q, i) => {
+        const selected = document.querySelector(`input[name="${q}"]:checked`);
+        const result = document.getElementById(`result${i+1}`);
+        const options = document.querySelectorAll(`input[name="${q}"]`);
+        options.forEach(o => o.closest('.quiz-option').classList.remove('correct','wrong'));
+        if (!selected) { result.textContent = 'Veuillez sélectionner une réponse.'; result.className = 'quiz-result show fail'; return; }
+        const isCorrect = selected.value === answers[q];
+        result.textContent = feedback[q][isCorrect ? 'ok' : 'fail'];
+        result.className = `quiz-result show ${isCorrect ? 'ok' : 'fail'}`;
+        selected.closest('.quiz-option').classList.add(isCorrect ? 'correct' : 'wrong');
+        if (!isCorrect) document.querySelector(`input[name="${q}"][value="${answers[q]}"]`).closest('.quiz-option').classList.add('correct');
+      });
+    }
+
+    function copyCode(btn) {
+      const block = btn.parentElement;
+      const text = block.innerText.replace('Copier','').replace('Copié !','').trim();
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copié !';
+        setTimeout(() => btn.textContent = 'Copier', 2000);
+      });
+    }
+
+    const sections = document.querySelectorAll('.section');
+    const links = document.querySelectorAll('.sidebar-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+    });
+  </script>
+
+</body>
+</html>

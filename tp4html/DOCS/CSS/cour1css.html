@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cours CSS — Leçon 5</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f4ff;
+      --ink: #0d1b3e;
+      --accent: #2563eb;
+      --accent2: #16a34a;
+      --accent-light: #dbeafe;
+      --muted: #64748b;
+      --card: #e2eafc;
+      --code-bg: #0d1b3e;
+      --code-fg: #e8eeff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--ink); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+    /* HEADER */
+    header { border-bottom: 2px solid var(--ink); padding: 1.2rem 3rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; letter-spacing: -0.02em; }
+    .logo em { font-style: italic; color: var(--accent); }
+    nav { display: flex; gap: 2rem; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+    nav a { color: var(--ink); text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: var(--accent); }
+    .lesson-badge { background: var(--accent); color: white; padding: 0.35rem 0.9rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* HERO */
+    .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 50vh; border-bottom: 2px solid var(--ink); }
+    .hero-left { padding: 5rem 3rem; border-right: 2px solid var(--ink); display: flex; flex-direction: column; justify-content: center; animation: fadeUp 0.8s ease both; }
+    .hero-tag { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .hero-tag::before { content: ''; display: inline-block; width: 30px; height: 2px; background: var(--accent); }
+    h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    h1 em { font-style: italic; color: var(--accent); }
+    .hero-desc { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 420px; }
+    .hero-right { padding: 3rem; display: flex; flex-direction: column; justify-content: center; background: var(--code-bg); color: var(--code-fg); position: relative; overflow: hidden; animation: fadeUp 0.8s 0.2s ease both; }
+    .hero-right::before { content: 'CSS'; position: absolute; bottom: -1rem; right: 1.5rem; font-size: 9rem; font-family: 'DM Serif Display', serif; color: rgba(255,255,255,0.04); }
+    .code-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 1.5rem; text-transform: uppercase; }
+    .code-hero { font-family: 'DM Mono', monospace; font-size: 0.88rem; line-height: 2; position: relative; z-index: 1; }
+
+    /* Syntax */
+    .t { color: #60a5fa; }
+    .a { color: #93c5fd; }
+    .v { color: #fbbf24; }
+    .c { color: #475569; font-style: italic; }
+    .s { color: #86efac; }
+    .p { color: #f9a8d4; }
+    .val { color: #fbbf24; }
+
+    /* MAIN LAYOUT */
+    .main { display: grid; grid-template-columns: 260px 1fr; border-bottom: 2px solid var(--ink); }
+
+    /* SIDEBAR */
+    aside { border-right: 2px solid var(--ink); padding: 2.5rem 0; position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto; }
+    .aside-title { padding: 0 1.5rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 700; color: var(--muted); text-decoration: none; border-left: 3px solid transparent; transition: all 0.2s; }
+    .sidebar-link:hover { color: var(--ink); background: var(--accent-light); border-left-color: var(--accent); }
+    .sidebar-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-light); }
+    .sidebar-link .num { font-family: 'DM Mono', monospace; font-size: 0.7rem; background: var(--ink); color: var(--bg); padding: 0.15rem 0.4rem; min-width: 24px; text-align: center; }
+    .sidebar-link.active .num { background: var(--accent); }
+
+    /* CONTENT */
+    .content { padding: 3rem 4rem; max-width: 820px; animation: fadeUp 0.8s 0.3s ease both; }
+    .section { margin-bottom: 4rem; }
+    .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    h2 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; margin-bottom: 1.25rem; letter-spacing: -0.02em; line-height: 1.15; }
+    h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin: 2rem 0 0.75rem; color: var(--ink); }
+    p { font-size: 1rem; line-height: 1.85; color: #334155; margin-bottom: 1rem; }
+    strong { color: var(--ink); font-weight: 700; }
+    ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+    li { font-size: 1rem; line-height: 1.85; color: #334155; margin-bottom: 0.25rem; }
+
+    /* CODE BLOCKS */
+    .code-block { background: var(--code-bg); color: var(--code-fg); padding: 1.75rem 2rem; font-family: 'DM Mono', monospace; font-size: 0.85rem; line-height: 1.9; margin: 1.5rem 0; position: relative; border-left: 4px solid var(--accent); overflow-x: auto; white-space: pre; }
+    .copy-btn { position: absolute; top: 0.75rem; right: 1rem; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; font-family: 'Syne', sans-serif; user-select: none; white-space: nowrap; }
+    .copy-btn:hover { color: #60a5fa; }
+    code { font-family: 'DM Mono', monospace; background: var(--accent-light); color: var(--accent); padding: 0.15em 0.45em; font-size: 0.88em; }
+
+    /* CALLOUT */
+    .callout { border: 2px solid var(--ink); padding: 1.5rem 2rem; margin: 2rem 0; position: relative; background: var(--card); }
+    .callout::before { content: attr(data-icon); position: absolute; top: -0.9rem; left: 1.5rem; background: var(--bg); padding: 0 0.5rem; font-size: 1.1rem; }
+    .callout-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; color: var(--accent2); }
+    .callout p { color: var(--muted); margin: 0; font-size: 0.9rem; }
+    .callout.warn .callout-title { color: #b45309; }
+    .callout.info .callout-title { color: var(--accent); }
+
+    /* TABLES */
+    .table-wrap { overflow-x: auto; margin: 2rem 0; }
+    .ref-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .ref-table th { background: var(--ink); color: var(--bg); padding: 0.85rem 1rem; text-align: left; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    .ref-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--card); color: #334155; vertical-align: top; }
+    .ref-table tr:hover td { background: var(--accent-light); }
+    .ref-table td code { background: none; color: var(--accent); padding: 0; }
+
+    /* PRIORITY PYRAMID */
+    .pyramid { margin: 2rem 0; display: flex; flex-direction: column; gap: 4px; }
+    .pyramid-row { display: flex; align-items: center; gap: 1rem; }
+    .pyramid-bar { height: 44px; display: flex; align-items: center; padding: 0 1.25rem; font-size: 0.85rem; font-weight: 700; color: white; transition: opacity 0.2s; cursor: default; }
+    .pyramid-bar:hover { opacity: 0.85; }
+    .pyramid-label { font-size: 0.8rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .bar-1 { background: #64748b; width: 40%; }
+    .bar-2 { background: #2563eb; width: 60%; }
+    .bar-3 { background: #7c3aed; width: 80%; }
+    .bar-4 { background: #dc2626; width: 100%; }
+
+    /* SELECTOR DEMOS */
+    .selector-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--ink); border: 2px solid var(--ink); margin: 2rem 0; }
+    .selector-item { background: var(--bg); padding: 1.25rem 1.5rem; transition: background 0.2s; }
+    .selector-item:hover { background: var(--accent-light); }
+    .selector-name { font-family: 'DM Mono', monospace; font-size: 0.9rem; color: var(--accent); font-weight: 500; margin-bottom: 0.3rem; }
+    .selector-syntax { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: #86efac; margin-bottom: 0.5rem; }
+    .selector-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+    /* COLOR DEMOS */
+    .color-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 2rem 0; }
+    .color-swatch { height: 70px; display: flex; align-items: flex-end; padding: 0.4rem; position: relative; }
+    .color-swatch span { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.5); line-height: 1.3; }
+
+    /* UNITS TABLE */
+    .units-split { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
+
+    /* DEMO */
+    .demo { border: 2px solid var(--ink); margin: 2rem 0; }
+    .demo-header { background: var(--ink); color: var(--bg); padding: 0.75rem 1.5rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .demo-body { padding: 1.5rem 2rem; }
+
+    /* Live demo styles */
+    .demo-h1-red { color: red; font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .demo-h1-italic { font-style: italic; font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .demo-h1-normal { font-family: 'DM Serif Display', serif; font-size: 1.5rem; }
+    .demo-rouge { background-color: red; color: white; font-size: 1.2em; padding: 0.2rem 0.5rem; display: inline-block; margin-bottom: 0.5rem; }
+    .demo-bleue-h1 { background-color: blue; color: white; font-size: 1.5rem; font-family: 'DM Serif Display', serif; padding: 0.2rem 0.5rem; margin-bottom: 0.5rem; display: block; }
+    .demo-bleue-p { background-color: blue; color: white; font-size: 1.2em; padding: 0.2rem 0.5rem; display: inline-block; }
+
+    /* INHERIT DEMO */
+    .inherit-demo { border: 1px solid var(--card); padding: 1rem; font-size: 1rem; }
+    .inherit-demo b i code { font-family: 'DM Mono', monospace; }
+
+    /* PROGRESS */
+    .progress-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .progress-bar { height: 4px; background: var(--card); margin-bottom: 3rem; }
+    .progress-fill { height: 100%; background: var(--accent); width: 50%; }
+
+    /* DIVIDER */
+    .divider { height: 2px; background: var(--card); margin: 3rem 0; }
+
+    /* QUIZ */
+    .quiz { border: 2px solid var(--ink); margin: 2rem 0; }
+    .quiz-header { background: var(--ink); color: var(--bg); padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .quiz-body { padding: 1.5rem; }
+    .quiz-q { margin-bottom: 2rem; }
+    .quiz-question { font-weight: 700; margin-bottom: 1rem; font-size: 0.95rem; }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .quiz-option { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border: 1.5px solid var(--card); cursor: pointer; font-size: 0.9rem; transition: all 0.2s; background: var(--bg); }
+    .quiz-option:hover { border-color: var(--accent); background: var(--accent-light); }
+    .quiz-option.correct { border-color: var(--accent2); background: #dcfce7; color: var(--accent2); }
+    .quiz-option.wrong { border-color: #dc2626; background: #fee2e2; color: #dc2626; }
+    .quiz-option input[type="radio"] { accent-color: var(--accent); }
+    .quiz-btn { margin-top: 1rem; background: var(--ink); color: var(--bg); border: none; padding: 0.85rem 2rem; font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+    .quiz-btn:hover { background: var(--accent); }
+    .quiz-result { display: none; margin-top: 1rem; font-weight: 700; font-size: 0.9rem; }
+    .quiz-result.show { display: block; }
+    .quiz-result.ok { color: var(--accent2); }
+    .quiz-result.fail { color: #dc2626; }
+
+    /* NAV */
+    .nav-actions { display: flex; justify-content: space-between; align-items: center; padding: 2rem 4rem; border-top: 2px solid var(--ink); }
+    .lesson-counter { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .nav-btn { display: flex; align-items: center; gap: 0.75rem; background: none; border: 2px solid var(--ink); padding: 0.85rem 1.5rem; font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; color: var(--ink); transition: all 0.2s; }
+    .nav-btn:hover { background: var(--ink); color: var(--bg); }
+    .nav-btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+    .nav-btn.primary:hover { background: var(--ink); border-color: var(--ink); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 1024px) { .content { padding: 2.5rem; } }
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .main { grid-template-columns: 1fr; }
+      aside { display: none; }
+      .content { padding: 1.5rem; }
+      header { padding: 1rem 1.5rem; }
+      nav { display: none; }
+      .selector-grid, .units-split, .color-grid { grid-template-columns: 1fr; }
+      .nav-actions { padding: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+      h1 { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">HTML<em>Academy</em></div>
+    <nav>
+      <a href="#">Cours</a>
+      <a href="#">Référence</a>
+      <a href="#">Exercices</a>
+    </nav>
+    <span class="lesson-badge">Leçon 1 / 2</span>
+  </header>
+
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-tag">Introduction au CSS</div>
+      <h1>Les feuilles de <em>style</em></h1>
+      <p class="hero-desc">Comprenez le principe des feuilles de style, maîtrisez les sélecteurs, la cascade, l'héritage, les unités et les couleurs CSS.</p>
+    </div>
+    <div class="hero-right">
+      <div class="code-label">// une règle CSS</div>
+      <pre class="code-hero"><span class="c">/* sélecteur de type */</span>
+<span class="s">h1</span> {
+  <span class="p">color</span>: <span class="val">red</span>;
+  <span class="p">background</span>: <span class="val">yellow</span>;
+}
+
+<span class="c">/* sélecteur de classe */</span>
+<span class="s">.ma-classe</span> {
+  <span class="p">font-size</span>: <span class="val">1.5em</span>;
+}
+
+<span class="c">/* sélecteur d'identification */</span>
+<span class="s">#mon-id</span> {
+  <span class="p">border</span>: <span class="val">2px solid blue</span>;
+}</pre>
+    </div>
+  </section>
+
+  <div class="main">
+    <aside>
+      <div class="aside-title">Dans cette leçon</div>
+      <a href="#principe" class="sidebar-link active"><span class="num">01</span> Le principe du CSS</a>
+      <a href="#historique" class="sidebar-link"><span class="num">02</span> Historique</a>
+      <a href="#integrer" class="sidebar-link"><span class="num">03</span> Intégrer le CSS</a>
+      <a href="#declaration" class="sidebar-link"><span class="num">04</span> Déclaration de style</a>
+      <a href="#selecteurs" class="sidebar-link"><span class="num">05</span> Les sélecteurs</a>
+      <a href="#cascade" class="sidebar-link"><span class="num">06</span> Notions de cascade</a>
+      <a href="#heritage" class="sidebar-link"><span class="num">07</span> L'héritage</a>
+      <a href="#unites" class="sidebar-link"><span class="num">08</span> Unités de mesure</a>
+      <a href="#couleurs" class="sidebar-link"><span class="num">09</span> Les couleurs</a>
+      <a href="#quiz" class="sidebar-link"><span class="num">10</span> Quiz</a>
+    </aside>
+
+    <div class="content">
+
+      <div class="progress-label">Progression du cours</div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+
+      <!-- SECTION 1 -->
+      <div class="section" id="principe">
+        <div class="section-label">01 — Principe</div>
+        <h2>Le principe des feuilles de style</h2>
+        <p>Les feuilles de style CSS (Cascading Style Sheets) sont des ajouts de code au langage HTML qui prennent en charge la <strong>présentation</strong> du document. Le concept repose sur la <strong>séparation du contenu et de la présentation</strong>.</p>
+        <p>Le rôle du HTML se limite à la <strong>structure</strong> de la page. Presque tous les éléments de présentation (attributs HTML comme <code>border</code>, balise <code>&lt;font&gt;</code>…) ont disparu en HTML5.</p>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- ❌ Ancien HTML 4 : présentation dans le HTML --&gt;</span>
+<span class="t">&lt;h1&gt;</span><span class="t">&lt;font</span> <span class="a">color</span>=<span class="v">"green"</span><span class="t">&gt;</span>Titre<span class="t">&lt;/font&gt;&lt;/h1&gt;</span>
+
+<span class="c">&lt;!-- ✅ HTML5 moderne : style en CSS --&gt;</span>
+<span class="t">&lt;h1</span> <span class="a">style</span>=<span class="v">"color: red"</span><span class="t">&gt;</span>Titre<span class="t">&lt;/h1&gt;</span></div>
+
+        <div class="callout" data-icon="💡">
+          <div class="callout-title">L'avantage majeur</div>
+          <p>Modifier un style dans une feuille CSS unique, et ce sont des <strong>centaines de pages</strong> qui voient leur présentation mise à jour instantanément. Impossible à faire si le style est écrit directement dans chaque balise HTML.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 2 -->
+      <div class="section" id="historique">
+        <div class="section-label">02 — Historique</div>
+        <h2>Historique du CSS</h2>
+
+        <div class="table-wrap">
+          <table class="ref-table">
+            <thead>
+              <tr><th>Année</th><th>Événement</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>1994</strong></td><td>Premières idées de feuilles de style pour pallier les limites du HTML en matière de présentation</td></tr>
+              <tr><td><strong>1995</strong></td><td>Le W3C commence à fonctionner et travaille sur les feuilles de style</td></tr>
+              <tr><td><strong>1996</strong></td><td>Publication officielle de <strong>CSS1</strong> le 17 décembre</td></tr>
+              <tr><td><strong>1998</strong></td><td>Publication de <strong>CSS2</strong> le 12 mai</td></tr>
+              <tr><td><strong>2006</strong></td><td>Corrections et extensions mineures sous la dénomination <strong>CSS2.1</strong></td></tr>
+              <tr><td><strong>2009+</strong></td><td><strong>CSS3</strong> — ensemble de modules indépendants, standard encore en évolution</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info" data-icon="🔗">
+          <div class="callout-title">Ressources indispensables</div>
+          <p>Vérifiez la compatibilité navigateur d'une propriété CSS sur <strong>Can I Use</strong> : <code>caniuse.com</code>. Consultez les modules CSS3 en cours sur <code>w3.org/Style/CSS/current-work</code>.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 3 -->
+      <div class="section" id="integrer">
+        <div class="section-label">03 — Intégration</div>
+        <h2>Intégrer les styles CSS</h2>
+        <p>Il existe 3 façons d'intégrer du CSS, chacune avec une portée et une priorité différente.</p>
+
+        <h3>1 — Style en ligne (le plus prioritaire)</h3>
+        <p>Directement dans la balise HTML avec l'attribut <code>style</code>. À éviter : ne respecte pas la séparation contenu/présentation et rend les mises à jour très laborieuses.</p>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="t">&lt;h1</span> <span class="a">style</span>=<span class="v">"color: red;"</span><span class="t">&gt;</span>Titre en rouge<span class="t">&lt;/h1&gt;</span>
+<span class="t">&lt;h1</span> <span class="a">style</span>=<span class="v">"font-style: italic;"</span><span class="t">&gt;</span>Titre en italique<span class="t">&lt;/h1&gt;</span></div>
+
+        <div class="demo">
+          <div class="demo-header">Rendu — style en ligne</div>
+          <div class="demo-body">
+            <div class="demo-h1-red">Titre en rouge (style="color:red")</div>
+            <div class="demo-h1-italic">Titre en italique</div>
+            <div class="demo-h1-normal">Titre en style normal (défaut)</div>
+          </div>
+        </div>
+
+        <h3>2 — Style interne</h3>
+        <p>Dans une balise <code>&lt;style&gt;</code> dans le <code>&lt;head&gt;</code>. S'applique à toutes les balises de la page. Le style en ligne reste prioritaire.</p>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- Dans le &lt;head&gt; --&gt;</span>
+<span class="t">&lt;style&gt;</span>
+  <span class="s">h1</span> {
+    <span class="p">color</span>: <span class="val">red</span>;
+  }
+<span class="t">&lt;/style&gt;</span>
+
+<span class="c">&lt;!-- Dans le &lt;body&gt; --&gt;</span>
+<span class="t">&lt;h1&gt;</span>Titre rouge (style interne)<span class="t">&lt;/h1&gt;</span>
+<span class="t">&lt;h1</span> <span class="a">style</span>=<span class="v">"color: blue;"</span><span class="t">&gt;</span>Titre bleu (style en ligne, prioritaire)<span class="t">&lt;/h1&gt;</span></div>
+
+        <h3>3 — Style externe (recommandé)</h3>
+        <p>Un fichier <code>.css</code> séparé lié à toutes les pages HTML. Portée maximale. Respecte parfaitement la séparation contenu/présentation. Un fichier <code>.css</code> ne contient <strong>que des règles CSS</strong>, jamais de balises HTML.</p>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">&lt;!-- Dans le &lt;head&gt; de chaque page HTML --&gt;</span>
+<span class="t">&lt;link</span> <span class="a">href</span>=<span class="v">"style.css"</span> <span class="a">rel</span>=<span class="v">"stylesheet"</span> <span class="a">type</span>=<span class="v">"text/css"</span><span class="t">/&gt;</span></div>
+
+        <h3>Les 4 niveaux de style</h3>
+        <p>Le style final appliqué est la <strong>somme</strong> de tous les niveaux, du plus global au plus prioritaire :</p>
+
+        <div class="pyramid">
+          <div class="pyramid-row">
+            <div class="pyramid-bar bar-1">Style par défaut du navigateur</div>
+            <span class="pyramid-label">priorité la plus basse</span>
+          </div>
+          <div class="pyramid-row">
+            <div class="pyramid-bar bar-2">+ Style externe (.css)</div>
+            <span class="pyramid-label">s'ajoute au défaut</span>
+          </div>
+          <div class="pyramid-row">
+            <div class="pyramid-bar bar-3">+ Style interne (&lt;style&gt;)</div>
+            <span class="pyramid-label">écrase l'externe en cas de conflit</span>
+          </div>
+          <div class="pyramid-row">
+            <div class="pyramid-bar bar-4">+ Style en ligne (style="...")</div>
+            <span class="pyramid-label">priorité maximale</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 4 -->
+      <div class="section" id="declaration">
+        <div class="section-label">04 — Déclaration</div>
+        <h2>La déclaration de style CSS</h2>
+        <p>Une déclaration de style est composée du binôme <strong>propriété : valeur ;</strong>. Elle se termine toujours par un point-virgule.</p>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Structure d'une règle CSS */</span>
+<span class="s">sélecteur</span> {
+  <span class="p">propriété1</span>: <span class="val">valeur</span>;
+  <span class="p">propriété2</span>: <span class="val">valeur</span>;
+  <span class="p">propriété3</span>: <span class="val">valeur</span>;
+}
+
+<span class="c">/* Exemple concret */</span>
+<span class="s">h1</span> {
+  <span class="p">color</span>: <span class="val">red</span>;
+  <span class="p">text-decoration</span>: <span class="val">underline</span>;
+  <span class="p">background-color</span>: <span class="val">yellow</span>;
+}</div>
+
+        <p>Les <strong>propriétés</strong> identifient ce qui sera stylisé : police (<code>font-*</code>), texte (<code>text-*</code>), arrière-plan (<code>background-*</code>), bordures (<code>border-*</code>)…</p>
+        <p>Les <strong>valeurs</strong> s'expriment par un mot-clé (<code>red</code>), un pourcentage (<code>80%</code>), une grandeur (<code>16px</code>), ou même une fonction (<code>rgb()</code>).</p>
+
+        <div class="callout warn" data-icon="⚠️">
+          <div class="callout-title">Syntaxe — point-virgule obligatoire</div>
+          <p>Chaque déclaration doit se terminer par un <code>;</code>. Oublier un point-virgule est l'une des erreurs les plus fréquentes en CSS — elle peut annuler toutes les déclarations suivantes dans le même bloc.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 5 -->
+      <div class="section" id="selecteurs">
+        <div class="section-label">05 — Sélecteurs</div>
+        <h2>Les sélecteurs CSS</h2>
+        <p>Les sélecteurs indiquent <strong>où s'appliquent</strong> les styles. Quelques règles : pas d'espaces ni de caractères spéciaux dans les noms, pas de début par un chiffre, tout en minuscules de préférence.</p>
+
+        <div class="selector-grid">
+          <div class="selector-item">
+            <div class="selector-name">Sélecteur de type</div>
+            <div class="selector-syntax">balise { ... }</div>
+            <div class="selector-desc">Cible <strong>toutes</strong> les balises de ce type dans le document. Priorité la plus basse des 3.</div>
+          </div>
+          <div class="selector-item">
+            <div class="selector-name">Sélecteur de classe</div>
+            <div class="selector-syntax">.nom-classe { ... }</div>
+            <div class="selector-desc">Cible tous les éléments ayant <code>class="nom-classe"</code>. Réutilisable sur n'importe quelle balise. Prioritaire sur le type.</div>
+          </div>
+          <div class="selector-item">
+            <div class="selector-name">Sélecteur d'identification</div>
+            <div class="selector-syntax">#mon-id { ... }</div>
+            <div class="selector-desc">Cible l'élément unique ayant <code>id="mon-id"</code>. Un id ne peut apparaître <strong>qu'une seule fois</strong> par page. Prioritaire sur la classe.</div>
+          </div>
+          <div class="selector-item">
+            <div class="selector-name">Sélecteur multiple</div>
+            <div class="selector-syntax">h1, h2, h3 { ... }</div>
+            <div class="selector-desc">Applique le même style à plusieurs sélecteurs. Les séparer par des virgules.</div>
+          </div>
+        </div>
+
+        <h3>Sélecteur de type</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Cible tous les &lt;p&gt; de la page */</span>
+<span class="s">p</span> {
+  <span class="p">background-color</span>: <span class="val">red</span>;
+}</div>
+
+        <h3>Sélecteur de classe</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Classe simple — utilisable sur toute balise */</span>
+<span class="s">.rouge</span> {
+  <span class="p">background-color</span>: <span class="val">red</span>;
+  <span class="p">color</span>: <span class="val">white</span>;
+  <span class="p">font-size</span>: <span class="val">1.5em</span>;
+}
+
+<span class="c">/* Classe liée à une balise spécifique */</span>
+<span class="s">blockquote.rouge</span> {
+  <span class="p">background-color</span>: <span class="val">red</span>;
+  <span class="p">color</span>: <span class="val">white</span>;
+}
+
+<span class="c">/* Plusieurs classes sur un même élément HTML */</span>
+<span class="c">/* &lt;p class="rouge souligne"&gt; */</span>
+<span class="s">.souligne</span> { <span class="p">text-decoration</span>: <span class="val">underline</span>; }
+<span class="s">p.rouge.souligne</span> { <span class="p">text-decoration-color</span>: <span class="val">yellow</span>; }</div>
+
+        <div class="demo">
+          <div class="demo-header">Rendu — classe .bleue sur h1 et p</div>
+          <div class="demo-body">
+            <div class="demo-bleue-h1">h1 avec class="bleue"</div>
+            <span class="demo-bleue-p">p avec class="bleue"</span>
+            <p style="margin-top:0.75rem;font-size:0.8rem;color:var(--muted);">La même classe produit un rendu légèrement différent car le style s'ajoute au style par défaut de chaque balise.</p>
+          </div>
+        </div>
+
+        <h3>Sélecteur d'identification</h3>
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Cible l'élément unique avec id="rouge" */</span>
+<span class="s">#rouge</span> {
+  <span class="p">background-color</span>: <span class="val">red</span>;
+  <span class="p">color</span>: <span class="val">white</span>;
+}
+
+<span class="c">/* Combinaison id + class (pas de conflit) */</span>
+<span class="c">/* &lt;p id="rouge" class="taille"&gt; */</span>
+<span class="s">#rouge</span> { <span class="p">background-color</span>: <span class="val">red</span>; }
+<span class="s">.taille</span> { <span class="p">font-size</span>: <span class="val">25px</span>; }
+<span class="c">/* → style = défaut + id + class */</span>
+
+<span class="c">/* Sélecteur multiple */</span>
+<span class="s">h1, div.contenu</span> {
+  <span class="p">color</span>: <span class="val">blue</span>;
+  <span class="p">background-color</span>: <span class="val">white</span>;
+}</div>
+
+        <div class="callout" data-icon="🏆">
+          <div class="callout-title">Ordre de priorité des sélecteurs</div>
+          <p>En cas de conflit : <strong>id</strong> &gt; <strong>class</strong> &gt; <strong>type</strong>. L'id est toujours prioritaire sur la classe, qui est prioritaire sur le type de balise. Et <code>!important</code> passe devant tout le monde.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 6 -->
+      <div class="section" id="cascade">
+        <div class="section-label">06 — Cascade</div>
+        <h2>Notions de cascade</h2>
+        <p>En cas de conflit entre deux règles CSS, c'est la règle la <strong>plus prioritaire</strong> qui l'emporte. L'ordre de priorité, du plus bas au plus haut :</p>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* 1. Style externe — fichier style.css */</span>
+<span class="s">h1</span> {
+  <span class="p">text-decoration</span>: <span class="val">overline</span>;
+  <span class="p">color</span>: <span class="val">green</span>;
+}
+
+<span class="c">/* 2. Style interne — dans &lt;style&gt; du &lt;head&gt; */</span>
+<span class="s">h1</span> {
+  <span class="p">text-decoration</span>: <span class="val">underline</span>;
+  <span class="p">color</span>: <span class="val">blueviolet</span>;   <span class="c">/* écrase le green */</span>
+}
+
+<span class="c">/* 3. Style en ligne — sur la balise directement */</span>
+<span class="c">&lt;h1 style="color: orange;"&gt; → orange (prioritaire) &lt;/h1&gt;</span>
+
+<span class="c">/* 4. !important — passe devant tout */</span>
+<span class="s">h1</span> { <span class="p">color</span>: <span class="val">green</span> <span class="val">!important</span>; }</div>
+
+        <div class="callout warn" data-icon="❗">
+          <div class="callout-title">!important</div>
+          <p><code>!important</code> force une propriété à être prioritaire sur toutes les autres, même sur le style en ligne. À utiliser avec parcimonie — un abus de <code>!important</code> rend le CSS très difficile à maintenir.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 7 -->
+      <div class="section" id="heritage">
+        <div class="section-label">07 — Héritage</div>
+        <h2>La notion d'héritage</h2>
+        <p>Le HTML est basé sur le modèle <strong>Parent-Enfants</strong>. Toute balise a forcément un parent, sauf <code>&lt;html&gt;</code>. Ce modèle entraîne le principe d'<strong>héritage CSS</strong> : chaque élément enfant reçoit les styles de son parent.</p>
+        <p>C'est d'ailleurs de là que vient le nom CSS = <em>Cascading</em> Style Sheets — les styles se propagent <strong>en cascade</strong> du parent vers ses enfants.</p>
+
+        <div class="demo">
+          <div class="demo-header">Exemple — héritage du gras et de l'italique</div>
+          <div class="demo-body">
+            <div class="inherit-demo">
+              <b>Une phrase en gras (1)
+                <i>, avec des parties en italique (2)
+                  <code> et du code (3)</code>
+                </i>
+              </b>
+            </div>
+            <p style="margin-top:0.75rem;font-size:0.85rem;color:var(--muted);">La balise <code>&lt;code&gt;</code> hérite du gras de <code>&lt;b&gt;</code> ET de l'italique de <code>&lt;i&gt;</code>, en plus de son propre style (police monospace).</p>
+          </div>
+        </div>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Appliquer une couleur sur html la propage sur TOUS les enfants */</span>
+<span class="s">html</span> {
+  <span class="p">color</span>: <span class="val">brown</span>;   <span class="c">/* héritable → propagé à body, div, p, span… */</span>
+}
+
+<span class="c">/* Attention : certaines propriétés ne sont PAS héritables */</span>
+<span class="s">div</span> {
+  <span class="p">width</span>: <span class="val">500px</span>;  <span class="c">/* non héritable → les enfants ne récupèrent pas 500px */</span>
+  <span class="p">border</span>: <span class="val">1px solid black</span>;  <span class="c">/* non héritable */</span>
+}</div>
+
+        <div class="callout info" data-icon="📖">
+          <div class="callout-title">Propriétés héritables</div>
+          <p>Les propriétés de texte (<code>color</code>, <code>font-*</code>, <code>text-*</code>, <code>line-height</code>…) sont héritables. Les propriétés de boîte (<code>width</code>, <code>height</code>, <code>border</code>, <code>margin</code>, <code>padding</code>…) ne le sont généralement pas. Vérifiez sur <code>developer.mozilla.org</code> pour chaque propriété.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 8 -->
+      <div class="section" id="unites">
+        <div class="section-label">08 — Unités</div>
+        <h2>Les unités de mesure</h2>
+        <p>On distingue les <strong>valeurs absolues</strong> (constantes quel que soit l'écran) et les <strong>valeurs relatives</strong> (qui varient selon le contexte).</p>
+
+        <div class="units-split">
+          <div>
+            <h3>Valeurs absolues</h3>
+            <div class="table-wrap" style="margin-top:0.75rem;">
+              <table class="ref-table">
+                <thead><tr><th>Unité</th><th>Nom</th><th>Equiv.</th></tr></thead>
+                <tbody>
+                  <tr><td><code>pt</code></td><td>point</td><td>72pt = 1in</td></tr>
+                  <tr><td><code>pc</code></td><td>pica</td><td>1pc = 12pt</td></tr>
+                  <tr><td><code>mm</code></td><td>millimètre</td><td>10mm = 1cm</td></tr>
+                  <tr><td><code>cm</code></td><td>centimètre</td><td>1cm = 10mm</td></tr>
+                  <tr><td><code>in</code></td><td>inch (pouce)</td><td>1in = 2.54cm</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h3>Valeurs relatives</h3>
+            <div class="table-wrap" style="margin-top:0.75rem;">
+              <table class="ref-table">
+                <thead><tr><th>Unité</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td><code>em</code></td><td>Relatif à la taille de police parente</td></tr>
+                  <tr><td><code>ex</code></td><td>Hauteur de la minuscule x de la police</td></tr>
+                  <tr><td><code>px</code></td><td>Pixel — dépend de la résolution d'écran</td></tr>
+                  <tr><td><code>%</code></td><td>Pourcentage par rapport au parent</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout" data-icon="📐">
+          <div class="callout-title">Recommandation</div>
+          <p>Pour le web, préférez les unités <strong>relatives</strong> (<code>em</code>, <code>%</code>) aux unités absolues pour un meilleur rendu sur tous les écrans. Les unités absolues (<code>cm</code>, <code>mm</code>…) sont plutôt adaptées à l'impression.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 9 -->
+      <div class="section" id="couleurs">
+        <div class="section-label">09 — Couleurs</div>
+        <h2>Les couleurs en CSS</h2>
+        <p>CSS propose plusieurs notations pour déclarer une couleur. Toutes sont équivalentes et peuvent être utilisées selon vos préférences.</p>
+
+        <div class="table-wrap">
+          <table class="ref-table">
+            <thead>
+              <tr><th>Notation</th><th>Syntaxe</th><th>Exemple</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Hexadécimale classique</td><td><code>#rrggbb</code></td><td><code>#ff0000</code> → rouge</td></tr>
+              <tr><td>Hexadécimale abrégée</td><td><code>#rgb</code></td><td><code>#f00</code> → rouge (= <code>#ff0000</code>)</td></tr>
+              <tr><td>Décimale RGB</td><td><code>rgb(r, g, b)</code></td><td><code>rgb(255, 0, 0)</code></td></tr>
+              <tr><td>Pourcentage</td><td><code>rgb(r%, g%, b%)</code></td><td><code>rgb(100%, 0%, 0%)</code></td></tr>
+              <tr><td>Mot-clé</td><td>nom anglais</td><td><code>red</code>, <code>blue</code>, <code>coral</code>…</td></tr>
+              <tr><td>RGBa (CSS3)</td><td><code>rgba(r, g, b, a)</code></td><td><code>rgba(255, 0, 0, 0.5)</code> → semi-transparent</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="code-block"><span class="copy-btn" onclick="copyCode(this)">Copier</span><span class="c">/* Toutes ces lignes donnent du rouge */</span>
+<span class="s">p</span> { <span class="p">color</span>: <span class="val">#ff0000</span>; }       <span class="c">/* hexadécimal classique */</span>
+<span class="s">p</span> { <span class="p">color</span>: <span class="val">#f00</span>; }           <span class="c">/* hexadécimal abrégé */</span>
+<span class="s">p</span> { <span class="p">color</span>: <span class="val">rgb(255, 0, 0)</span>; } <span class="c">/* décimal */</span>
+<span class="s">p</span> { <span class="p">color</span>: <span class="val">rgb(100%, 0%, 0%)</span>; } <span class="c">/* pourcentage */</span>
+<span class="s">p</span> { <span class="p">color</span>: <span class="val">red</span>; }             <span class="c">/* mot-clé */</span>
+
+<span class="c">/* RGBa — avec transparence (a = 0 transparent, 1 opaque) */</span>
+<span class="s">div</span> { <span class="p">background-color</span>: <span class="val">rgba(255, 0, 0, 0.5)</span>; }
+<span class="s">div</span> { <span class="p">background-color</span>: <span class="val">rgba(0, 0, 255, 0.3)</span>; }</div>
+
+        <div class="color-grid">
+          <div class="color-swatch" style="background:#dc2626;"><span>#dc2626<br>rouge</span></div>
+          <div class="color-swatch" style="background:#2563eb;"><span>#2563eb<br>bleu</span></div>
+          <div class="color-swatch" style="background:#16a34a;"><span>#16a34a<br>vert</span></div>
+          <div class="color-swatch" style="background:#7c3aed;"><span>#7c3aed<br>violet</span></div>
+          <div class="color-swatch" style="background:#f59e0b;"><span>#f59e0b<br>ambre</span></div>
+          <div class="color-swatch" style="background:rgba(220,38,38,0.4);border:1px solid #ccc;"><span style="color:#333;">rgba rouge<br>0.4</span></div>
+          <div class="color-swatch" style="background:rgba(37,99,235,0.4);border:1px solid #ccc;"><span style="color:#333;">rgba bleu<br>0.4</span></div>
+          <div class="color-swatch" style="background:#0d1b3e;"><span>#0d1b3e<br>marine</span></div>
+          <div class="color-swatch" style="background:#f0f4ff;border:1px solid #ccc;"><span style="color:#334155;">#f0f4ff<br>clair</span></div>
+          <div class="color-swatch" style="background:coral;"><span>coral<br>(mot-clé)</span></div>
+        </div>
+
+        <div class="callout info" data-icon="💡">
+          <div class="callout-title">Abréviation hexadécimale</div>
+          <p>On ne peut abréger que si chaque composante est doublée : <code>#ffdd33</code> → <code>#fd3</code> ✅. Mais <code>#cfe4f5</code> ne peut pas être abrégé car les chiffres ne se répètent pas ❌.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SECTION 10 : QUIZ -->
+      <div class="section" id="quiz">
+        <div class="section-label">10 — Quiz</div>
+        <h2>Testez vos connaissances</h2>
+
+        <div class="quiz">
+          <div class="quiz-header">3 questions sur le CSS</div>
+          <div class="quiz-body">
+
+            <!-- Q1 -->
+            <div class="quiz-q">
+              <p class="quiz-question">1. En cas de conflit, quel type de style est le plus prioritaire ?</p>
+              <div class="quiz-options">
+                <label class="quiz-option"><input type="radio" name="q1" value="a"> Style externe (.css)</label>
+                <label class="quiz-option"><input type="radio" name="q1" value="b"> Style interne (&lt;style&gt;)</label>
+                <label class="quiz-option"><input type="radio" name="q1" value="c"> Style en ligne (style="...")</label>
+                <label class="quiz-option"><input type="radio" name="q1" value="d"> Style par défaut du navigateur</label>
+              </div>
+              <div id="result1" class="quiz-result"></div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="quiz-q">
+              <p class="quiz-question">2. Quel sélecteur CSS cible un élément unique identifié par <code>id="titre"</code> ?</p>
+              <div class="quiz-options">
+                <label class="quiz-option"><input type="radio" name="q2" value="a"> <code>.titre { }</code></label>
+                <label class="quiz-option"><input type="radio" name="q2" value="b"> <code>titre { }</code></label>
+                <label class="quiz-option"><input type="radio" name="q2" value="c"> <code>#titre { }</code></label>
+                <label class="quiz-option"><input type="radio" name="q2" value="d"> <code>@titre { }</code></label>
+              </div>
+              <div id="result2" class="quiz-result"></div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="quiz-q">
+              <p class="quiz-question">3. Quelle notation CSS permet d'ajouter de la transparence à une couleur ?</p>
+              <div class="quiz-options">
+                <label class="quiz-option"><input type="radio" name="q3" value="a"> <code>#rrggbbaa</code></label>
+                <label class="quiz-option"><input type="radio" name="q3" value="b"> <code>rgba(r, g, b, a)</code></label>
+                <label class="quiz-option"><input type="radio" name="q3" value="c"> <code>rgb(r, g, b, a)</code></label>
+                <label class="quiz-option"><input type="radio" name="q3" value="d"> <code>opacity(r, g, b)</code></label>
+              </div>
+              <div id="result3" class="quiz-result"></div>
+            </div>
+
+            <button class="quiz-btn" onclick="checkQuiz()">Vérifier les réponses</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="nav-actions">
+    <a href="cours-html-4.html" class="nav-btn">← Leçon 4</a>
+    <span class="lesson-counter">Leçon 1 / 2</span>
+    <a href="#" class="nav-btn primary">Leçon 2 →</a>
+  </div>
+
+  <script>
+    const answers = { q1: 'c', q2: 'c', q3: 'b' };
+    const feedback = {
+      q1: { ok: '✓ Correct ! Le style en ligne (style="...") est le plus prioritaire, juste après !important.', fail: '✗ La bonne réponse est le style en ligne. Ordre : externe < interne < en ligne.' },
+      q2: { ok: '✓ Correct ! Le sélecteur d\'id utilise le # devant le nom.', fail: '✗ La bonne réponse est #titre { }. Le . est pour les classes, pas les ids.' },
+      q3: { ok: '✓ Correct ! rgba(r, g, b, a) ajoute un canal alpha (transparence) entre 0 et 1.', fail: '✗ La bonne réponse est rgba(). Le 4e paramètre "a" contrôle l\'opacité (0=transparent, 1=opaque).' }
+    };
+
+    function checkQuiz() {
+      ['q1','q2','q3'].forEach((q, i) => {
+        const selected = document.querySelector(`input[name="${q}"]:checked`);
+        const result = document.getElementById(`result${i+1}`);
+        const options = document.querySelectorAll(`input[name="${q}"]`);
+        options.forEach(o => o.closest('.quiz-option').classList.remove('correct','wrong'));
+        if (!selected) { result.textContent = 'Veuillez sélectionner une réponse.'; result.className = 'quiz-result show fail'; return; }
+        const isCorrect = selected.value === answers[q];
+        result.textContent = feedback[q][isCorrect ? 'ok' : 'fail'];
+        result.className = `quiz-result show ${isCorrect ? 'ok' : 'fail'}`;
+        selected.closest('.quiz-option').classList.add(isCorrect ? 'correct' : 'wrong');
+        if (!isCorrect) document.querySelector(`input[name="${q}"][value="${answers[q]}"]`).closest('.quiz-option').classList.add('correct');
+      });
+    }
+
+    function copyCode(btn) {
+      const block = btn.parentElement;
+      const text = block.innerText.replace('Copier','').replace('Copié !','').trim();
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copié !';
+        setTimeout(() => btn.textContent = 'Copier', 2000);
+      });
+    }
+
+    const sections = document.querySelectorAll('.section');
+    const links = document.querySelectorAll('.sidebar-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+    });
+  </script>
+
+</body>
+</html>

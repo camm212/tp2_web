@@ -1,0 +1,118 @@
+ /*BASE*/
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-width: 600px;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin: 20px 0 10px;
+      font-size: 2rem;
+      letter-spacing: 2px;
+    }
+
+    p.instructions {
+      text-align: center;
+      color: #555;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    /*5 colonnes, 4 lignes*/
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* CARTE */
+    .card {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    /* Face cachée*/
+    .card .face-cachee {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: opacity 0.4s ease;
+      border-radius: 10px;
+    }
+
+    .card .face-cachee::after {
+      content: "?";
+      font-size: 2.5rem;
+      color: rgba(255,255,255,0.7);
+      font-weight: bold;
+    }
+
+    /*changer couleur de fond */
+    .card:hover .face-cachee {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+    }
+
+    /* Image*/
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border: solid 1px black; 
+    }
+
+    /*cacher l'image via opacity*/
+    /* utilisation une checkbox cachée */
+    .card input[type="checkbox"] {
+      display: none;
+    }
+
+    /* Quand la checkbox est cochée, on masque la face cachée alors l'image  est visible */
+    .card input[type="checkbox"]:checked ~ .face-cachee {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Le label couvre toute la carte pour intercepter le clic */
+    .card label {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    /* Quand carte retournée, le hover ne change plus la couleur */
+    .card input[type="checkbox"]:checked ~ label {
+      pointer-events: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #aaa;
+      font-size: 0.8rem;
+    }
